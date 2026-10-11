@@ -13,7 +13,7 @@ body {
 }
 
 /* =========================================
-   1. Scoreboard (အောက်ခြေတွင် ထင်ရှားစွာ ပြသခြင်း)
+   1. Scoreboard (အောက်ခြေ)
    ========================================= */
 .scoreboard-wrapper {
   position: absolute;
@@ -96,7 +96,7 @@ body {
 }
 
 /* =========================================
-   2. Tactical Pitch Layout (Field ကို ကျစ်ကျစ်လျစ်လျစ် ချုံ့ထားခြင်း)
+   2. Tactical Pitch Layout (Field)
    ========================================= */
 .lineups-container {
   position: absolute;
@@ -118,7 +118,6 @@ body {
   transform: translateY(0);
 }
 
-/* Field Card ကို ၃၀% သို့ ချုံ့ပြီး Streamer မျက်နှာကို ၄၀% အထိ နေရာပိုပေးထားခြင်း */
 .pitch-card {
   width: 30%;
   background: rgba(10, 15, 29, 0.95);
@@ -344,7 +343,7 @@ body {
 .top-goal-net { top: 0; }
 
 /* =========================================
-   4. Tactical Positioning & Jersey Sizing (ကြီးမားထင်ရှားသော Jersey)
+   4. Extra Large Jerseys (သိသိသာသာ ကြီးမားထင်ရှားသော Jersey Sizing)
    ========================================= */
 .pitch-players {
   position: absolute;
@@ -368,18 +367,37 @@ body {
   padding: 0 4px;
 }
 
-/* ၁၊ ၂၊ ၃၊ ၄ ယောက်တန်းနှင့် GK အားလုံးအတွက် ကြီးမားထင်ရှားသော Jersey Size (66px) */
+/* အခြေခံ Jersey အကြီးစား (88px x 98px) */
 .jersey-img {
-  width: 66px;
-  height: 74px;
+  width: 88px;
+  height: 98px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.95));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.95));
   transition: transform 0.2s ease;
 }
 
-/* ၅ ယောက်တန်းအတွက်သာ ကွင်းဘောင်မလျှံစေရန် အချိုးကျ ထိန်းထားသော Size (52px) */
+/* ၁ ယောက်တန်း (ST သို့မဟုတ် GK) - အထူးကြီးမားစေခြင်း */
+.pitch-row.row-1 .jersey-img {
+  width: 96px;
+  height: 106px;
+}
+
+/* ၂ ယောက်တန်း နှင့် ၃ ယောက်တန်း */
+.pitch-row.row-2 .jersey-img,
+.pitch-row.row-3 .jersey-img {
+  width: 88px;
+  height: 98px;
+}
+
+/* ၄ ယောက်တန်း */
+.pitch-row.row-4 .jersey-img {
+  width: 80px;
+  height: 90px;
+}
+
+/* ၅ ယောက်တန်း (ကွင်းစည်းကျော်မထွက်အောင် အချိုးကျ ထိန်းထားသော Size) */
 .pitch-row.row-5 .jersey-img,
 .pitch-row.row-five .jersey-img {
-  width: 52px;
-  height: 58px;
+  width: 64px;
+  height: 72px;
 }
