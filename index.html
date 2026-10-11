@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Football Stream Overlay</title>
+  <link rel="stylesheet" href="css/overlay.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+  <!-- Top Broadcast Scoreboard -->
+  <div class="scoreboard-wrapper">
+    <div class="scoreboard" id="scoreboard" style="display: none;">
+      <div class="team-badge home">
+        <div class="team-color-strip" id="home-strip"></div>
+        <img id="home-logo" class="logo" src="" alt="">
+        <span class="team-code" id="home-code">CHE</span>
+        <span class="score" id="home-score">0</span>
+      </div>
+
+      <div class="team-badge away">
+        <span class="score" id="away-score">0</span>
+        <span class="team-code" id="away-code">BOU</span>
+        <img id="away-logo" class="logo" src="" alt="">
+        <div class="team-color-strip" id="away-strip"></div>
+      </div>
+
+      <div class="clock-badge">
+        <span class="time-txt" id="match-clock">00:00</span>
+        <span class="period-txt" id="match-period">1st Half</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tactical Pitch Lineup Overlay (Left & Right, Middle Transparent) -->
+  <div class="lineups-container" id="lineups-panel">
+    <!-- Home Pitch (Left) -->
+    <div class="pitch-card left-pitch">
+      <div class="pitch-header">
+        <img id="lu-home-logo" class="mini-logo" src="" alt="">
+        <div>
+          <div class="team-title" id="lu-home-name">CHELSEA</div>
+          <span class="formation-tag" id="lu-home-form">3-4-2-1</span>
+        </div>
+      </div>
+      <!-- Tactical Field -->
+      <div class="pitch-field" id="home-pitch-field"></div>
+    </div>
+
+    <!-- Center Camera Transparent Area -->
+    <div class="streamer-center-gap"></div>
+
+    <!-- Away Pitch (Right) -->
+    <div class="pitch-card right-pitch">
+      <div class="pitch-header reverse">
+        <img id="lu-away-logo" class="mini-logo" src="" alt="">
+        <div>
+          <div class="team-title" id="lu-away-name">BOURNEMOUTH</div>
+          <span class="formation-tag" id="lu-away-form">4-2-3-1</span>
+        </div>
+      </div>
+      <!-- Tactical Field -->
+      <div class="pitch-field" id="away-pitch-field"></div>
+    </div>
+  </div>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/overlay.js"></script>
+</body>
+</html>
