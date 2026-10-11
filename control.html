@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match & Lineup Controller</title>
+  <link rel="stylesheet" href="css/control.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+  <h2>TW Live Match Controller</h2>
+
+  <!-- 1. Clock & Period Control -->
+  <div class="card">
+    <div class="timer-display" id="ctrl-clock">00:00</div>
+    <div class="row">
+      <button class="btn btn-green" onclick="startTimer()">Start</button>
+      <button class="btn btn-yellow" onclick="pauseTimer()">Pause</button>
+      <button class="btn btn-slate" onclick="setTimerMin(45)">45' (2nd)</button>
+      <button class="btn btn-red" onclick="resetTimer()">Reset 00'</button>
+    </div>
+    <div class="grid-4" style="margin-top: 8px;">
+      <button class="btn btn-status" onclick="setPeriod('1st Half')">1st Half</button>
+      <button class="btn btn-status" onclick="setPeriod('HT')">HT</button>
+      <button class="btn btn-status" onclick="setPeriod('2nd Half')">2nd Half</button>
+      <button class="btn btn-status" onclick="setPeriod('FT')">FT</button>
+    </div>
+  </div>
+
+  <!-- 2. Score Adjuster -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="team-header-box">
+        <img id="ctrl-h-logo" class="thumb" src="" alt="">
+        <span id="ctrl-h-short">CHE</span>
+      </div>
+      <div class="score-display" id="ctrl-h-score">0</div>
+      <div class="row">
+        <button class="btn btn-green" onclick="adjustScore('home', 1)">+1</button>
+        <button class="btn btn-red" onclick="adjustScore('home', -1)">-1</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="team-header-box">
+        <img id="ctrl-a-logo" class="thumb" src="" alt="">
+        <span id="ctrl-a-short">BOU</span>
+      </div>
+      <div class="score-display" id="ctrl-a-score">0</div>
+      <div class="row">
+        <button class="btn btn-green" onclick="adjustScore('away', 1)">+1</button>
+        <button class="btn btn-red" onclick="adjustScore('away', -1)">-1</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Lineup Overlay Toggle (Show / Hide) -->
+  <div class="card">
+    <div class="row">
+      <button class="btn btn-purple" style="font-size: 15px; padding: 14px;" onclick="toggleLineup(true)">Show Lineup (Left & Right)</button>
+      <button class="btn btn-slate" style="font-size: 15px; padding: 14px;" onclick="toggleLineup(false)">Hide Lineup</button>
+    </div>
+  </div>
+
+  <!-- 4. Team & Formation Selectors -->
+  <div class="card">
+    <span class="sub-label">Home Team & Formation</span>
+    <div class="row">
+      <select id="home-team-select"></select>
+      <select id="home-formation-select"></select>
+    </div>
+
+    <span class="sub-label" style="margin-top: 10px;">Away Team & Formation</span>
+    <div class="row">
+      <select id="away-team-select"></select>
+      <select id="away-formation-select"></select>
+    </div>
+
+    <button class="btn btn-blue" style="width: 100%; margin-top: 12px; padding: 12px;" onclick="saveTeamsAndFormations()">Apply Teams & Formations</button>
+  </div>
+
+  <!-- Reset Button -->
+  <div style="margin: 20px 0 30px 0;">
+    <button class="btn btn-danger-all" onclick="resetAllMatch()">RESET ALL DATA (New Match)</button>
+  </div>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/control.js"></script>
+</body>
+</html>
