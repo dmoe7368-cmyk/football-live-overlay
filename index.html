@@ -13,6 +13,7 @@
   <!-- Top Broadcast Scoreboard -->
   <div class="scoreboard-wrapper">
     <div class="scoreboard" id="scoreboard" style="display: none;">
+      <!-- Home Team -->
       <div class="team-badge home">
         <div class="team-color-strip" id="home-strip"></div>
         <img id="home-logo" class="logo" src="" alt="">
@@ -20,13 +21,15 @@
         <span class="score" id="home-score">0</span>
       </div>
 
+      <!-- Away Team -->
       <div class="team-badge away">
         <span class="score" id="away-score">0</span>
-        <span class="team-code" id="away-code">BOU</span>
+        <span class="team-code" id="away-code">TOT</span>
         <img id="away-logo" class="logo" src="" alt="">
         <div class="team-color-strip" id="away-strip"></div>
       </div>
 
+      <!-- Match Clock & Period -->
       <div class="clock-badge">
         <span class="time-txt" id="match-clock">00:00</span>
         <span class="period-txt" id="match-period">1st Half</span>
@@ -34,8 +37,9 @@
     </div>
   </div>
 
-  <!-- Tactical Pitch Lineup Overlay (Left & Right, Middle Transparent) -->
+  <!-- Tactical Pitch Lineups -->
   <div class="lineups-container" id="lineups-panel">
+    
     <!-- Home Pitch (Left) -->
     <div class="pitch-card left-pitch">
       <div class="pitch-header">
@@ -45,8 +49,36 @@
           <span class="formation-tag" id="lu-home-form">3-4-2-1</span>
         </div>
       </div>
-      <!-- Tactical Field -->
-      <div class="pitch-field" id="home-pitch-field"></div>
+      
+      <!-- Green Pitch with Full Markings -->
+      <div class="pitch-field">
+        <div class="pitch-markings">
+          <!-- အလယ်စည်း၊ အလယ်စက်ဝိုင်း နှင့် အလယ်ဗဟိုအစက် -->
+          <div class="halfway-line"></div>
+          <div class="center-circle"></div>
+          <div class="center-spot"></div>
+
+          <!-- အပေါ်ဘက် တိုက်စစ်စည်းများနှင့် ဂိုးပေါက် -->
+          <div class="top-goal-net"></div>
+          <div class="top-penalty-box"></div>
+          <div class="top-goal-box"></div>
+          <div class="top-penalty-arc"></div>
+          <div class="top-penalty-spot"></div>
+          <div class="corner-arc top-left"></div>
+          <div class="corner-arc top-right"></div>
+
+          <!-- အောက်ဘက် ခံစစ်စည်းများနှင့် GK ဂိုးပေါက် -->
+          <div class="bottom-penalty-arc"></div>
+          <div class="bottom-penalty-box"></div>
+          <div class="bottom-goal-box"></div>
+          <div class="bottom-penalty-spot"></div>
+          <div class="corner-arc bottom-left"></div>
+          <div class="corner-arc bottom-right"></div>
+          <div class="bottom-goal-net"></div>
+        </div>
+        <!-- Jerseys Layer -->
+        <div class="pitch-players" id="home-pitch-players"></div>
+      </div>
     </div>
 
     <!-- Center Camera Transparent Area -->
@@ -57,13 +89,42 @@
       <div class="pitch-header reverse">
         <img id="lu-away-logo" class="mini-logo" src="" alt="">
         <div>
-          <div class="team-title" id="lu-away-name">BOURNEMOUTH</div>
+          <div class="team-title" id="lu-away-name">TOTTENHAM</div>
           <span class="formation-tag" id="lu-away-form">4-2-3-1</span>
         </div>
       </div>
-      <!-- Tactical Field -->
-      <div class="pitch-field" id="away-pitch-field"></div>
+      
+      <!-- Green Pitch with Full Markings -->
+      <div class="pitch-field">
+        <div class="pitch-markings">
+          <!-- အလယ်စည်း၊ အလယ်စက်ဝိုင်း နှင့် အလယ်ဗဟိုအစက် -->
+          <div class="halfway-line"></div>
+          <div class="center-circle"></div>
+          <div class="center-spot"></div>
+
+          <!-- အပေါ်ဘက် တိုက်စစ်စည်းများနှင့် ဂိုးပေါက် -->
+          <div class="top-goal-net"></div>
+          <div class="top-penalty-box"></div>
+          <div class="top-goal-box"></div>
+          <div class="top-penalty-arc"></div>
+          <div class="top-penalty-spot"></div>
+          <div class="corner-arc top-left"></div>
+          <div class="corner-arc top-right"></div>
+
+          <!-- အောက်ဘက် ခံစစ်စည်းများနှင့် GK ဂိုးပေါက် -->
+          <div class="bottom-penalty-arc"></div>
+          <div class="bottom-penalty-box"></div>
+          <div class="bottom-goal-box"></div>
+          <div class="bottom-penalty-spot"></div>
+          <div class="corner-arc bottom-left"></div>
+          <div class="corner-arc bottom-right"></div>
+          <div class="bottom-goal-net"></div>
+        </div>
+        <!-- Jerseys Layer -->
+        <div class="pitch-players" id="away-pitch-players"></div>
+      </div>
     </div>
+
   </div>
 
   <script src="js/firebase-config.js"></script>
