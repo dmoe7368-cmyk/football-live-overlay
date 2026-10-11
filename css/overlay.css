@@ -13,12 +13,16 @@ body {
 }
 
 /* =========================================
-   1. Scoreboard
+   1. Scoreboard (Screen အောက်ခြေသို့ ပြောင်းရွှေ့ထားခြင်း)
    ========================================= */
 .scoreboard-wrapper {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  width: 100vw;
   display: flex;
   justify-content: center;
-  padding-top: 14px;
+  z-index: 100;
 }
 
 .scoreboard {
@@ -27,7 +31,7 @@ body {
   background: rgba(10, 15, 29, 0.96);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75);
   color: #fff;
   overflow: hidden;
 }
@@ -36,76 +40,76 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 16px;
+  padding: 6px 14px;
 }
 
 .team-color-strip {
   width: 6px;
-  height: 30px;
+  height: 28px;
   border-radius: 3px;
   background: #2563eb;
 }
 
 .logo {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
 .team-code {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 900;
   letter-spacing: 0.5px;
 }
 
 .score {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   background: #1e293b;
-  padding: 4px 14px;
+  padding: 3px 12px;
   border-radius: 6px;
-  min-width: 32px;
+  min-width: 30px;
   text-align: center;
 }
 
 .clock-badge {
   background: #0284c7;
-  padding: 8px 16px;
+  padding: 6px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 90px;
+  min-width: 85px;
 }
 
 .time-txt {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: #ffffff;
 }
 
 .period-txt {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   color: #e0f2fe;
 }
 
 /* =========================================
-   2. Tactical Pitch Layout
+   2. Tactical Pitch Layout (အနေတော် ချုံ့ထားသော Lineup)
    ========================================= */
 .lineups-container {
   position: absolute;
-  top: 75px;
+  top: 14px;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 85px);
+  height: calc(100vh - 90px); /* အောက်ခြေ Scoreboard နေရာအတွက် ချန်ထားခြင်း */
   display: flex;
   justify-content: space-between;
-  padding: 6px 12px;
+  padding: 0 14px;
   pointer-events: none;
   opacity: 0;
-  transform: translateY(15px);
+  transform: translateY(-10px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
@@ -115,26 +119,26 @@ body {
 }
 
 .pitch-card {
-  width: 38%;
+  width: 34%; /* Streamer မျက်နှာ ပိုမိုပေါ်လွင်စေရန် အချိုးကျ ချုံ့ထားခြင်း */
   background: rgba(10, 15, 29, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  padding: 8px;
+  padding: 6px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
 }
 
 .streamer-center-gap {
-  width: 22%;
+  width: 30%; /* အလယ် Streamer မျက်နှာအတွက် ကျယ်ဝန်းသော နေရာလွတ် */
 }
 
 .pitch-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
+  gap: 6px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -144,23 +148,23 @@ body {
 }
 
 .mini-logo {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
 }
 
 .team-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   color: #f8fafc;
 }
 
 .formation-tag {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
   color: #38bdf8;
   background: rgba(56, 189, 248, 0.15);
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 3px;
 }
 
@@ -173,14 +177,14 @@ body {
   background: repeating-linear-gradient(
     to bottom,
     #1d833e 0px,
-    #1d833e 36px,
-    #177234 36px,
-    #177234 72px
+    #1d833e 32px,
+    #177234 32px,
+    #177234 64px
   );
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.5);
 }
 
 .pitch-markings {
@@ -192,6 +196,7 @@ body {
   pointer-events: none;
 }
 
+/* အလယ်စည်း */
 .halfway-line {
   position: absolute;
   top: 50%;
@@ -202,13 +207,14 @@ body {
   transform: translateY(-50%);
 }
 
+/* အလယ်စက်ဝိုင်း */
 .center-circle {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
 }
@@ -218,12 +224,13 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: #ffffff;
   border-radius: 50%;
 }
 
+/* အောက်ဘက် ပင်နယ်တီစည်း */
 .bottom-penalty-box {
   position: absolute;
   bottom: 0;
@@ -251,11 +258,11 @@ body {
   bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  height: 22px;
+  width: 40px;
+  height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-bottom: none;
-  border-radius: 22px 22px 0 0;
+  border-radius: 20px 20px 0 0;
 }
 
 .bottom-penalty-spot {
@@ -269,6 +276,7 @@ body {
   border-radius: 50%;
 }
 
+/* အပေါ်ဘက် ပင်နယ်တီစည်း */
 .top-penalty-box {
   position: absolute;
   top: 0;
@@ -296,11 +304,11 @@ body {
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  height: 22px;
+  width: 40px;
+  height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-top: none;
-  border-radius: 0 0 22px 22px;
+  border-radius: 0 0 20px 20px;
 }
 
 .top-penalty-spot {
@@ -314,43 +322,34 @@ body {
   border-radius: 50%;
 }
 
+/* ထောင့်ကန်ဘော စည်းများ */
 .corner-arc {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border: 2px solid rgba(255, 255, 255, 0.85);
 }
-.bottom-left { bottom: 0; left: 0; border-bottom: none; border-left: none; border-radius: 0 14px 0 0; }
-.bottom-right { bottom: 0; right: 0; border-bottom: none; border-right: none; border-radius: 14px 0 0 0; }
-.top-left { top: 0; left: 0; border-top: none; border-left: none; border-radius: 0 0 14px 0; }
-.top-right { top: 0; right: 0; border-top: none; border-right: none; border-radius: 0 0 0 14px; }
+.bottom-left { bottom: 0; left: 0; border-bottom: none; border-left: none; border-radius: 0 12px 0 0; }
+.bottom-right { bottom: 0; right: 0; border-bottom: none; border-right: none; border-radius: 12px 0 0 0; }
+.top-left { top: 0; left: 0; border-top: none; border-left: none; border-radius: 0 0 12px 0; }
+.top-right { top: 0; right: 0; border-top: none; border-right: none; border-radius: 0 0 0 12px; }
 
-.bottom-goal-net {
+/* ဂိုးပိုက်ကွန်များ */
+.bottom-goal-net, .top-goal-net {
   position: absolute;
-  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 30%;
-  height: 10px;
+  height: 9px;
   border: 2px solid #ffffff;
   background: repeating-linear-gradient(45deg, rgba(255,255,255,0.4) 0px, rgba(255,255,255,0.4) 1px, transparent 1px, transparent 4px);
   background-color: rgba(0, 40, 10, 0.4);
 }
-
-.top-goal-net {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30%;
-  height: 10px;
-  border: 2px solid #ffffff;
-  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.4) 0px, rgba(255,255,255,0.4) 1px, transparent 1px, transparent 4px);
-  background-color: rgba(0, 40, 10, 0.4);
-}
+.bottom-goal-net { bottom: 0; }
+.top-goal-net { top: 0; }
 
 /* =========================================
-   4. Tactical Positioning & Jersey Sizing
+   4. Tactical Positioning & Jersey Sizing (တစ်သမတ်တည်း ညီညာသော အရွယ်အစား)
    ========================================= */
 .pitch-players {
   position: absolute;
@@ -371,41 +370,21 @@ body {
   justify-content: space-evenly;
   align-items: center;
   flex-wrap: nowrap;
-  padding: 0 8px;
+  padding: 0 6px;
 }
 
+/* ၁၊ ၂၊ ၃၊ ၄ ယောက်တန်းနှင့် GK အားလုံးအတွက် တူညီသော Standard Jersey Size */
 .jersey-img {
+  width: 44px;
+  height: 50px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.95));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.85));
   transition: transform 0.2s ease;
 }
 
-/* ၁ ယောက်တန်း (ST သို့မဟုတ် GK) - အကြီးဆုံးအရွယ်အစား */
-.pitch-row.row-1 .jersey-img {
-  width: 76px;
-  height: 84px;
-}
-
-/* ၂ ယောက်တန်း */
-.pitch-row.row-2 .jersey-img {
-  width: 72px;
-  height: 80px;
-}
-
-/* ၃ ယောက်တန်း */
-.pitch-row.row-3 .jersey-img {
-  width: 68px;
-  height: 76px;
-}
-
-/* ၄ ယောက်တန်း - ကွင်းအပြည့် နေရာယူစေခြင်း */
-.pitch-row.row-4 .jersey-img {
-  width: 64px;
-  height: 72px;
-}
-
-/* ၅ ယောက်တန်း - ကွင်းဘောင်မကျော်ဘဲ သေသပ်စွာ ကွက်တိဝင်စေခြင်း */
-.pitch-row.row-5 .jersey-img {
-  width: 52px;
-  height: 58px;
+/* ၅ ယောက်တန်း တစ်ခုတည်းသာ မသိမသာ အနည်းငယ်သေးပြီး ဘေးမလျှံအောင် ထိန်းပေးခြင်း */
+.pitch-row.row-5 .jersey-img,
+.pitch-row.row-five .jersey-img {
+  width: 38px;
+  height: 44px;
 }
