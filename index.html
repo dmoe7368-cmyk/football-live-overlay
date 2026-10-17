@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- Top Broadcast Scoreboard -->
+  <!-- Broadcast Scoreboard (Enlarged Frame) -->
   <div class="scoreboard-wrapper">
     <div class="scoreboard" id="scoreboard" style="display: none;">
       <!-- Home Team -->
@@ -29,7 +29,7 @@
         <div class="team-color-strip" id="away-strip"></div>
       </div>
 
-      <!-- Match Clock & Period -->
+      <!-- Match Clock & Period (45 Min / 90 Min / HT / FT) -->
       <div class="clock-badge">
         <span class="time-txt" id="match-clock">00:00</span>
         <span class="period-txt" id="match-period">1st Half</span>
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <!-- Tactical Pitch Lineups -->
+  <!-- Tactical Pitch Lineups (Compact Jerseys Layout) -->
   <div class="lineups-container" id="lineups-panel">
     
     <!-- Home Pitch (Left) -->
@@ -53,12 +53,10 @@
       <!-- Green Pitch with Full Markings -->
       <div class="pitch-field">
         <div class="pitch-markings">
-          <!-- အလယ်စည်း၊ အလယ်စက်ဝိုင်း နှင့် အလယ်ဗဟိုအစက် -->
           <div class="halfway-line"></div>
           <div class="center-circle"></div>
           <div class="center-spot"></div>
 
-          <!-- အပေါ်ဘက် တိုက်စစ်စည်းများနှင့် ဂိုးပေါက် -->
           <div class="top-goal-net"></div>
           <div class="top-penalty-box"></div>
           <div class="top-goal-box"></div>
@@ -67,7 +65,6 @@
           <div class="corner-arc top-left"></div>
           <div class="corner-arc top-right"></div>
 
-          <!-- အောက်ဘက် ခံစစ်စည်းများနှင့် GK ဂိုးပေါက် -->
           <div class="bottom-penalty-arc"></div>
           <div class="bottom-penalty-box"></div>
           <div class="bottom-goal-box"></div>
@@ -76,7 +73,7 @@
           <div class="corner-arc bottom-right"></div>
           <div class="bottom-goal-net"></div>
         </div>
-        <!-- Jerseys Layer -->
+        <!-- Jersey ဝိုင်းလေးများသာ ဖော်ပြမည့် Layer -->
         <div class="pitch-players" id="home-pitch-players"></div>
       </div>
     </div>
@@ -97,12 +94,10 @@
       <!-- Green Pitch with Full Markings -->
       <div class="pitch-field">
         <div class="pitch-markings">
-          <!-- အလယ်စည်း၊ အလယ်စက်ဝိုင်း နှင့် အလယ်ဗဟိုအစက် -->
           <div class="halfway-line"></div>
           <div class="center-circle"></div>
           <div class="center-spot"></div>
 
-          <!-- အပေါ်ဘက် တိုက်စစ်စည်းများနှင့် ဂိုးပေါက် -->
           <div class="top-goal-net"></div>
           <div class="top-penalty-box"></div>
           <div class="top-goal-box"></div>
@@ -111,7 +106,6 @@
           <div class="corner-arc top-left"></div>
           <div class="corner-arc top-right"></div>
 
-          <!-- အောက်ဘက် ခံစစ်စည်းများနှင့် GK ဂိုးပေါက် -->
           <div class="bottom-penalty-arc"></div>
           <div class="bottom-penalty-box"></div>
           <div class="bottom-goal-box"></div>
@@ -120,11 +114,19 @@
           <div class="corner-arc bottom-right"></div>
           <div class="bottom-goal-net"></div>
         </div>
-        <!-- Jerseys Layer -->
+        <!-- Jersey ဝိုင်းလေးများသာ ဖော်ပြမည့် Layer -->
         <div class="pitch-players" id="away-pitch-players"></div>
       </div>
     </div>
 
+  </div>
+
+  <!-- Bottom Running Lineup Ticker Bar (Starting XI Scroll Overlay) -->
+  <div class="lineup-ticker-bar" id="lineup-ticker">
+    <div class="ticker-badge">LINEUPS</div>
+    <div class="ticker-track">
+      <div class="ticker-content" id="ticker-text">Loading Lineups...</div>
+    </div>
   </div>
 
   <script src="js/firebase-config.js"></script>
