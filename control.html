@@ -2,34 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Match & Lineup Controller</title>
   <link rel="stylesheet" href="css/control.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <style>
+    /* Custom Time Input & Ticker Buttons များအတွက် Helper Styles */
+    .custom-time-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .custom-time-input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 10px 8px;
+      color: #38bdf8;
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .btn-ticker-show {
+      background: #0284c7;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
   <h2>TW Live Match Controller</h2>
 
-  <!-- 1. Clock & Period Control -->
+  <!-- 1. Clock & Period Control (Custom Time Edit အပါအဝင်) -->
   <div class="card">
     <div class="timer-display" id="ctrl-clock">00:00</div>
+    
+    <!-- Primary Clock Buttons -->
     <div class="row">
       <button class="btn btn-green" onclick="startTimer()">Start</button>
       <button class="btn btn-yellow" onclick="pauseTimer()">Pause</button>
       <button class="btn btn-slate" onclick="setTimerMin(45)">45' (2nd)</button>
       <button class="btn btn-red" onclick="resetTimer()">Reset 00'</button>
     </div>
-    <div class="grid-4" style="margin-top: 8px;">
+
+    <!-- Custom Minute & Second Edit -->
+    <div class="custom-time-box">
+      <input type="number" id="input-custom-min" class="custom-time-input" placeholder="Min (e.g. 96)" min="0" max="150">
+      <input type="number" id="input-custom-sec" class="custom-time-input" placeholder="Sec (e.g. 26)" min="0" max="59">
+      <button class="btn btn-blue" style="padding: 10px 14px; font-weight: 800;" onclick="applyCustomTime()">Set Time</button>
+    </div>
+
+    <!-- Status Badges: 1st Half, HT, 2nd Half, FT -->
+    <div class="grid-4" style="margin-top: 10px;">
       <button class="btn btn-status" onclick="setPeriod('1st Half')">1st Half</button>
       <button class="btn btn-status" onclick="setPeriod('HT')">HT</button>
       <button class="btn btn-status" onclick="setPeriod('2nd Half')">2nd Half</button>
       <button class="btn btn-status" onclick="setPeriod('FT')">FT</button>
     </div>
+
+    <!-- Extended Status: 45 Min, 90 Min, Full Time -->
+    <div class="grid-3">
+      <button class="btn btn-status" onclick="setPeriod('45 Min')">45 Min</button>
+      <button class="btn btn-status" onclick="setPeriod('90 Min')">90 Min</button>
+      <button class="btn btn-status" onclick="setPeriod('Full Time')">Full Time</button>
+    </div>
   </div>
 
   <!-- 2. Score Adjuster -->
   <div class="grid-2">
+    <!-- Home Team Score -->
     <div class="card">
       <div class="team-header-box">
         <img id="ctrl-h-logo" class="thumb" src="" alt="">
@@ -42,6 +91,7 @@
       </div>
     </div>
 
+    <!-- Away Team Score -->
     <div class="card">
       <div class="team-header-box">
         <img id="ctrl-a-logo" class="thumb" src="" alt="">
@@ -55,11 +105,20 @@
     </div>
   </div>
 
-  <!-- 3. Lineup Overlay Toggle (Show / Hide) -->
+  <!-- 3. Overlays Control (Pitch Formation & Bottom Scroll Lineup) -->
   <div class="card">
+    <!-- Tactical Pitch Toggle -->
+    <span class="sub-label">Tactical Pitches (Left & Right)</span>
+    <div class="row" style="margin-bottom: 12px;">
+      <button class="btn btn-purple" style="font-size: 14px; padding: 12px;" onclick="toggleLineup(true)">Show Pitches</button>
+      <button class="btn btn-slate" style="font-size: 14px; padding: 12px;" onclick="toggleLineup(false)">Hide Pitches</button>
+    </div>
+
+    <!-- Bottom Lineup Ticker Toggle -->
+    <span class="sub-label">Bottom Scroll Lineup Ticker</span>
     <div class="row">
-      <button class="btn btn-purple" style="font-size: 15px; padding: 14px;" onclick="toggleLineup(true)">Show Lineup (Left & Right)</button>
-      <button class="btn btn-slate" style="font-size: 15px; padding: 14px;" onclick="toggleLineup(false)">Hide Lineup</button>
+      <button class="btn btn-ticker-show" style="font-size: 14px; padding: 12px;" onclick="toggleTicker(true)">Show Scroll Lineup</button>
+      <button class="btn btn-slate" style="font-size: 14px; padding: 12px;" onclick="toggleTicker(false)">Hide Scroll Lineup</button>
     </div>
   </div>
 
