@@ -1,5 +1,4 @@
-// Brentford vs Liverpool ပွဲထွက်စာရင်းနှင့် နည်းပြအမည်များ
-const CURRENT_MATCH_LINEUPS = {
+window.CURRENT_MATCH_LINEUPS = {
   bre: {
     name: "Brentford",
     manager: "Keith Andrews",
