@@ -13,11 +13,11 @@ body {
 }
 
 /* =========================================
-   1. Scoreboard (အနီရောင် Marking အတိုင်း အကြီးစား ချဲ့ထားခြင်း)
+   1. Scoreboard (အကြီးစား ချဲ့ထားပြီး Ticker အပေါ် အံဝင်ခွင်ကျ ထားခြင်း)
    ========================================= */
 .scoreboard-wrapper {
   position: absolute;
-  bottom: 14px;
+  bottom: 46px; /* အောက်ဆုံး Ticker Bar (40px) နှင့် မကပ်စေရန် အနည်းငယ်မြှင့်ထားခြင်း */
   left: 0;
   width: 100vw;
   display: flex;
@@ -34,18 +34,19 @@ body {
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85);
   color: #fff;
   overflow: hidden;
+  height: 64px; /* Frame ကို ပိုမိုပြတ်သားခိုင်မာစေရန် တိုးမြှင့်ထားခြင်း */
 }
 
 .team-badge {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 20px;
+  padding: 8px 18px;
 }
 
 .team-color-strip {
   width: 8px;
-  height: 40px;
+  height: 44px;
   border-radius: 4px;
   background: #2563eb;
 }
@@ -57,55 +58,59 @@ body {
 }
 
 .team-code {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
 .score {
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 900;
+  color: #facc15;
   background: #1e293b;
-  padding: 4px 16px;
+  padding: 2px 14px;
   border-radius: 8px;
-  min-width: 42px;
+  min-width: 46px;
   text-align: center;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .clock-badge {
   background: #0284c7;
-  padding: 10px 20px;
+  padding: 8px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 115px;
+  min-width: 125px;
+  height: 100%;
 }
 
 .time-txt {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
   color: #ffffff;
   letter-spacing: 0.5px;
+  line-height: 1.1;
 }
 
 .period-txt {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   color: #e0f2fe;
+  margin-top: 2px;
 }
 
 /* =========================================
-   2. Tactical Pitch Layout
+   2. Tactical Pitch Layout (ကျစ်ကျစ်လစ်လစ် အချိုးကျပြင်ဆင်မှု)
    ========================================= */
 .lineups-container {
   position: absolute;
-  top: 12px;
+  top: 10px;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 105px); /* Scoreboard ကြီးလာသည့်အတွက် အောက်ခြေနေရာ အချိုးကျ ချန်ထားခြင်း */
+  height: calc(100vh - 120px); /* Scoreboard နှင့် Ticker နေရာလွတ် ချန်ထားခြင်း */
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
@@ -121,7 +126,8 @@ body {
 }
 
 .pitch-card {
-  width: 30%;
+  width: 27%; /* ကင်မရာမကွယ်စေဘဲ ပိုမိုကျစ်လစ်စေရန် 30% မှ 27% သို့ ချိန်ညှိထားခြင်း */
+  max-width: 380px;
   background: rgba(10, 15, 29, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
@@ -132,13 +138,13 @@ body {
 }
 
 .streamer-center-gap {
-  width: 40%;
+  flex: 1; /* အလယ်ကင်မရာအတွက် နေရာလွတ် အချိုးကျယူစေခြင်း */
 }
 
 .pitch-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding-bottom: 5px;
   margin-bottom: 5px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -156,18 +162,19 @@ body {
 }
 
 .team-title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
   color: #f8fafc;
+  letter-spacing: 0.5px;
 }
 
 .formation-tag {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
   color: #38bdf8;
   background: rgba(56, 189, 248, 0.15);
-  padding: 1px 5px;
-  border-radius: 3px;
+  padding: 1px 6px;
+  border-radius: 4px;
 }
 
 /* =========================================
@@ -179,9 +186,9 @@ body {
   background: repeating-linear-gradient(
     to bottom,
     #1d833e 0px,
-    #1d833e 30px,
-    #177234 30px,
-    #177234 60px
+    #1d833e 26px,
+    #177234 26px,
+    #177234 52px
   );
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 8px;
@@ -213,8 +220,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
+  width: 54px;
+  height: 54px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
 }
@@ -257,11 +264,11 @@ body {
   bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 38px;
-  height: 19px;
+  width: 36px;
+  height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-bottom: none;
-  border-radius: 19px 19px 0 0;
+  border-radius: 18px 18px 0 0;
 }
 
 .bottom-penalty-spot {
@@ -302,11 +309,11 @@ body {
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 38px;
-  height: 19px;
+  width: 36px;
+  height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.85);
   border-top: none;
-  border-radius: 0 0 19px 19px;
+  border-radius: 0 0 18px 18px;
 }
 
 .top-penalty-spot {
@@ -345,7 +352,7 @@ body {
 .top-goal-net { top: 0; }
 
 /* =========================================
-   4. Extra Large Jerseys
+   4. Jerseys (အချိုးကျ ကျစ်လစ်လှပစေရန် ချိန်ညှိမှု)
    ========================================= */
 .pitch-players {
   position: absolute;
@@ -370,31 +377,85 @@ body {
 }
 
 .jersey-img {
-  width: 88px;
-  height: 98px;
+  width: 58px;
+  height: 66px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.95));
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.85));
   transition: transform 0.2s ease;
 }
 
+/* နေရာလွတ်အလိုက် အပေါ်အောက် အချိုးညီစေရန် ချိန်ညှိချက် */
 .pitch-row.row-1 .jersey-img {
-  width: 96px;
-  height: 106px;
+  width: 62px;
+  height: 70px;
 }
 
 .pitch-row.row-2 .jersey-img,
 .pitch-row.row-3 .jersey-img {
-  width: 88px;
-  height: 98px;
+  width: 58px;
+  height: 66px;
 }
 
 .pitch-row.row-4 .jersey-img {
-  width: 80px;
-  height: 90px;
+  width: 54px;
+  height: 62px;
 }
 
 .pitch-row.row-5 .jersey-img,
 .pitch-row.row-five .jersey-img {
-  width: 64px;
-  height: 72px;
+  width: 48px;
+  height: 54px;
+}
+
+/* =========================================
+   5. Bottom Lineup Running Ticker
+   ========================================= */
+.lineup-ticker-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  background: rgba(10, 15, 29, 0.98);
+  border-top: 2px solid #0284c7;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 999;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.ticker-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 0 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  z-index: 10;
+  letter-spacing: 1px;
+}
+
+.ticker-track {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: tickerScroll 38s linear infinite;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
