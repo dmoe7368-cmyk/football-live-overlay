@@ -3,30 +3,6 @@ let baseSeconds = 0;
 let isRunning = false;
 let startTime = 0;
 
-// အသင်း ၂၀ ၏ Starting XI Lineup Data (Scroll Ticker တွင် ဖော်ပြရန်)
-const TEAMS_LINEUP = {
-  ars: { name: "Arsenal", lineup: ["Raya(GK)", "Calafiori", "Gabriel", "Konsa", "White", "Lewis-Skelly", "Rice", "Madueke", "Ødegaard", "Saka", "Havertz"] },
-  avl: { name: "Aston Villa", lineup: ["Suzuki(GK)", "Ruggeri", "Mings", "Lindelöf", "Wan-Bissaka", "Gomes", "Kamara", "Buendía", "Manzambi", "McGinn", "Jackson"] },
-  bou: { name: "Bournemouth", lineup: ["Petrović(GK)", "Truffert", "Silva", "Hill", "Smith", "Scott", "Adams", "Tavernier", "Christie", "Rayan", "Evanilson"] },
-  bre: { name: "Brentford", lineup: ["Kelleher(GK)", "Lewis-Potter", "Ajer", "Schuster", "Kayode", "Janelt", "Yarmoliuk", "Schade", "Damsgaard", "Anthony", "Thiago"] },
-  bha: { name: "Brighton", lineup: ["Verbruggen(GK)", "Boscagli", "Struijk", "Vušković", "Kadıoğlu", "Ayari", "Andrés", "De Cuyper", "Groß", "Gómez", "Kostoulas"] },
-  che: { name: "Chelsea", lineup: ["Martínez(GK)", "Colwill", "Lacroix", "Fofana", "Chavarría", "Barco", "Henderson", "Neto", "Rogers", "Palmer", "Welbeck"] },
-  cov: { name: "Coventry City", lineup: ["Rushworth(GK)", "Pinnock", "Thomas", "Mfuni", "Dasilva", "Grimes", "Onyeka", "Yirenkyi", "Mason-Clark", "Thomas-Asante", "Rudoni"] },
-  cry: { name: "Crystal Palace", lineup: ["Benítez(GK)", "Canvot", "Tomiyasu", "Richards", "Mitchell", "Wharton", "Timber", "Khalaili", "Pino", "Kamada", "Strand Larsen"] },
-  eve: { name: "Everton", lineup: ["Pickford(GK)", "Mykolenko", "Branthwaite", "Tarkowski", "Maitland-Niles", "Garner", "Armstrong", "Grealish", "Dewsbury-Hall", "Johnson", "Barry"] },
-  ful: { name: "Fulham", lineup: ["Leno(GK)", "Robinson", "Bassey", "Affengruber", "Castagne", "Charles", "Berge", "Iwobi", "King", "Bobb", "García"] },
-  hul: { name: "Hull City", lineup: ["Tzolakis(GK)", "Giles", "Herrington", "Egan", "Ajayi", "Coyle", "Thomas", "Crooks", "Slater", "Belloumi", "McBurnie"] },
-  ips: { name: "Ipswich Town", lineup: ["Walton(GK)", "Davis", "O'Shea", "Diop", "Ouattara", "Palacios", "Lukić", "Clarke", "Enciso", "Fatawu", "Emersonn"] },
-  lee: { name: "Leeds United", lineup: ["Trafford(GK)", "Muharemović", "Elvedi", "Justin", "Gudmundsson", "Tanaka", "Ampadu", "Stach", "Bogle", "Okafor", "Calvert-Lewin"] },
-  liv: { name: "Liverpool", lineup: ["Alisson(GK)", "Kerkez", "van Dijk", "Jacquet", "Araujo", "Mac Allister", "Szoboszlai", "Barcola", "Wirtz", "Gakpo", "Isak"] },
-  mci: { name: "Man City", lineup: ["Donnarumma(GK)", "Gvardiol", "Guéhi", "Dias", "Nunes", "Anderson", "Fernández", "Semenyo", "Cherki", "Ndiaye", "Haaland"] },
-  mun: { name: "Man United", lineup: ["Lammens(GK)", "Shaw", "Martínez", "Maguire", "Dalot", "Mainoo", "Tielemans", "Rashford", "Fernandes", "Mbeumo", "Cunha"] },
-  new: { name: "Newcastle", lineup: ["Hornícek(GK)", "Hall", "Botman", "Thiaw", "Miley", "Steur", "Barnes", "Willock", "Wissa", "Murphy", "Fernandez-Pardo"] },
-  nfo: { name: "Nottm Forest", lineup: ["Sels(GK)", "Murillo", "Diomande", "Cunha", "Williams", "McAtee", "Schlager", "Muñoz", "Gibbs-White", "Ndoye", "Delap"] },
-  tot: { name: "Tottenham", lineup: ["Kinský(GK)", "Robertson", "Van de Ven", "van Hecke", "Porro", "Tonali", "Bentancur", "Marmoush", "Fernandes", "Sávio", "Solanke"] },
-  sun: { name: "Sunderland", lineup: ["Roefs(GK)", "Méthalie", "Ballard", "Danso", "Mukiele", "Sadiki", "Xhaka", "Angulo", "Le Fée", "Meunier", "Brobbey"] }
-};
-
 // Formation အလိုက် ကွင်းလယ်စည်း (Center 49%) ပေါ်တွင် အတိအကျ နေရာချထားမှု
 const FORMATION_POSITIONS = {
   // 3-Line Formations: [Forwards 23%, Midfield (Center 49%), Defenders 74%]
@@ -168,19 +144,30 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Bottom Lineup Scroll Ticker စာတန်းပြေး ရေးဆွဲခြင်း
+// Bottom Lineup Scroll Ticker စာတန်းပြေး ရေးဆွဲခြင်း (သီးသန့်ဖိုင် CURRENT_MATCH_LINEUPS မှ ဖတ်ယူခြင်း)
 function renderLineupTicker(homeKey, awayKey) {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
 
-  const hTeam = TEAMS_LINEUP[homeKey] || { name: homeKey.toUpperCase(), lineup: [] };
-  const aTeam = TEAMS_LINEUP[awayKey] || { name: awayKey.toUpperCase(), lineup: [] };
+  // data/lineup-data.js မှ CURRENT_MATCH_LINEUPS ရှိမရှိ စစ်ဆေးခြင်း
+  const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') ? CURRENT_MATCH_LINEUPS : {};
 
-  const hList = hTeam.lineup.join(' • ');
-  const aList = aTeam.lineup.join(' • ');
+  const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase(), manager: "", lineup: [] };
+  const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase(), manager: "", lineup: [] };
 
-  const tickerHtml = `<span style="color:#facc15; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hList} &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#38bdf8; font-weight:900;">[ ${aTeam.name.toUpperCase()} ]</span> ${aList}`;
+  const hList = hTeam.lineup && hTeam.lineup.length > 0 ? hTeam.lineup.join(' • ') : "Lineup TBA";
+  const aList = aTeam.lineup && aTeam.lineup.length > 0 ? aTeam.lineup.join(' • ') : "Lineup TBA";
 
-  // စာတန်းပြေးချောမွေ့စေရန် အဆက်မပြတ် ၂ ကြိမ် ထည့်သွင်းပေးခြင်း
-  tickerTextEl.innerHTML = `${tickerHtml} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${tickerHtml}`;
+  // နည်းပြ (Coach) အမည် ပါရှိပါက ထည့်သွင်းပြသခြင်း
+  const hCoach = hTeam.manager ? `<span style="color:#38bdf8; font-weight:800; margin-left:8px;">[Coach: ${hTeam.manager}]</span>` : '';
+  const aCoach = aTeam.manager ? `<span style="color:#38bdf8; font-weight:800; margin-left:8px;">[Coach: ${aTeam.manager}]</span>` : '';
+
+  const tickerHtml = `
+    <span style="color:#facc15; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hList} ${hCoach}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span style="color:#f87171; font-weight:900;">[ ${aTeam.name.toUpperCase()} ]</span> ${aList} ${aCoach}
+  `;
+
+  // စာတန်းပြတ်မသွားဘဲ ချောမွေ့စွာ ဆက်သွားစေရန် ၂ ကြိမ် ဆက်တိုက်ထည့်သွင်းခြင်း
+  tickerTextEl.innerHTML = `${tickerHtml} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${tickerHtml}`;
 }
