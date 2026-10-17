@@ -36,11 +36,19 @@ const FORMATIONS = [
 let current = {};
 let ctrlTimerInterval = null;
 
+// Dropdowns အစပြုခြင်း
 function initDropdowns() {
   const hTeam = document.getElementById('home-team-select');
   const aTeam = document.getElementById('away-team-select');
   const hForm = document.getElementById('home-formation-select');
   const aForm = document.getElementById('away-formation-select');
+
+  if (!hTeam || !aTeam || !hForm || !aForm) return;
+
+  hTeam.innerHTML = '';
+  aTeam.innerHTML = '';
+  hForm.innerHTML = '';
+  aForm.innerHTML = '';
 
   Object.entries(TEAMS).forEach(([key, t]) => {
     hTeam.add(new Option(`${t.short} - ${t.name}`, key));
@@ -60,12 +68,13 @@ function initDropdowns() {
 
 initDropdowns();
 
-// Realtime Listener
+// Realtime Firebase Listener
 matchRef.on('value', (snap) => {
   const data = snap.val();
   if (!data) return;
   current = data;
 
+  // Scoreboard Text & Logos
   document.getElementById('ctrl-h-short').textContent = data.homeShort || 'CHE';
   document.getElementById('ctrl-a-short').textContent = data.awayShort || 'BOU';
   document.getElementById('ctrl-h-score').textContent = data.homeScore ?? 0;
@@ -73,6 +82,7 @@ matchRef.on('value', (snap) => {
   document.getElementById('ctrl-h-logo').src = `assets/logos/${data.homeKey || 'che'}.png`;
   document.getElementById('ctrl-a-logo').src = `assets/logos/${data.awayKey || 'bou'}.png`;
 
+  // Selectors Sync
   if (data.homeKey) document.getElementById('home-team-select').value = data.homeKey;
   if (data.awayKey) document.getElementById('away-team-select').value = data.awayKey;
   if (data.homeFormation) document.getElementById('home-formation-select').value = data.homeFormation;
@@ -85,6 +95,7 @@ matchRef.on('value', (snap) => {
   }
 });
 
+// Timer Clock Display
 function renderClock() {
   let total = current.timer?.baseSeconds || 0;
   if (current.timer?.isRunning) {
@@ -119,7 +130,31 @@ function setTimerMin(min) {
   matchRef.child('timer').update({ isRunning: false, baseSeconds: min * 60, startTime: Date.now() });
 }
 
-// Score Functions
+// Custom Minute & Second Edit တိုက်ရိုက်သတ်မှတ်ခြင်း
+function applyCustomTime() {
+  const minInput = document.getElementById('input-custom-min');
+  const secInput = document.getElementById('input-custom-sec');
+
+  const min = parseInt(minInput.value, 10) || 0;
+  const sec = parseInt(secInput.value, 10) || 0;
+  const totalSeconds = (min * 60) + sec;
+
+  matchRef.child('timer').update({
+    baseSeconds: totalSeconds,
+    startTime: Date.now()
+  });
+
+  // Input Box ထဲရှိ တန်ဖိုးများကို ရှင်းလင်းပေးခြင်း
+  minInput.value = '';
+  secInput.value = '';
+}
+
+// Match Period & Status Functions (1st Half, HT, 2nd Half, FT, 45 Min, 90 Min, Full Time)
+function setPeriod(period) {
+  matchRef.update({ period });
+}
+
+// Score Adjust Functions
 function adjustScore(team, val) {
   if (team === 'home') {
     const homeScore = Math.max(0, (current.homeScore || 0) + val);
@@ -130,16 +165,21 @@ function adjustScore(team, val) {
   }
 }
 
-function setPeriod(period) {
-  matchRef.update({ period });
-}
-
-// Lineup Toggle Function (Parameter မပါလာပါက အဖွင့်/အပိတ် အလိုအလျောက် ပြောင်းလဲစေခြင်း)
+// Tactical Pitch Overlays Toggle (Show / Hide)
 function toggleLineup(show) {
   if (typeof show === 'boolean') {
     matchRef.update({ showLineup: show });
   } else {
     matchRef.update({ showLineup: !current.showLineup });
+  }
+}
+
+// Bottom Scroll Lineup Ticker Toggle (Show / Hide)
+function toggleTicker(show) {
+  if (typeof show === 'boolean') {
+    matchRef.update({ showTicker: show });
+  } else {
+    matchRef.update({ showTicker: !current.showTicker });
   }
 }
 
@@ -165,7 +205,7 @@ function saveTeamsAndFormations() {
   });
 }
 
-// Reset Match Function (Reset နှိပ်လျှင် Lineup မကွယ်သွားစေရန် showLineup: true သတ်မှတ်ထားခြင်း)
+// Reset Match Function (Lineup နှင့် Ticker နှစ်ခုလုံး ပြန်လည်အသက်ဝင်စေခြင်း)
 function resetAllMatch() {
   if (confirm("ပွဲစဉ်အချက်အလက် အားလုံးကို Reset ပြုလုပ်မှာ သေချာပါသလား?")) {
     matchRef.set({
@@ -184,7 +224,8 @@ function resetAllMatch() {
       awayFormation: "4-2-3-1",
 
       period: "1st Half",
-      showLineup: true, // Reset ရိုက်တိုင်း Lineup အလိုအလျောက် ပေါ်နေမည်ဖြစ်ပါသည်
+      showLineup: true,
+      showTicker: true,
       timer: {
         baseSeconds: 0,
         isRunning: false,
