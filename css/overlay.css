@@ -13,11 +13,11 @@ body {
 }
 
 /* =========================================
-   1. Enlarged Broadcast Scoreboard Frame
+   1. Extra Large Broadcast Scoreboard (အကြီးစား Frame)
    ========================================= */
 .scoreboard-wrapper {
   position: absolute;
-  bottom: 56px; /* အောက်ခြေ Ticker Bar (48px) အပေါ် အံဝင်ခွင်ကျ ထားခြင်း */
+  bottom: 68px; /* အောက်ခြေ Ticker Bar (56px) ကြီးလာသည့်အတွက် အပေါ်သို့ အချိုးကျ မြှင့်တင်ထားခြင်း */
   left: 0;
   width: 100vw;
   display: flex;
@@ -29,85 +29,85 @@ body {
   display: inline-flex;
   align-items: center;
   background: rgba(10, 15, 29, 0.98);
-  border-radius: 14px;
-  border: 2.5px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9);
+  border-radius: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.95);
   color: #fff;
   overflow: hidden;
-  height: 68px; /* Frame ကို ပိုကြီးပြီး ပြတ်သားစေရန် ချဲ့ထားခြင်း */
+  height: 84px; /* Frame အမြင့်ကို 68px မှ 84px သို့ အကြီးအကျယ် ချဲ့ထားခြင်း */
 }
 
 .team-badge {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 6px 20px;
+  gap: 14px;
+  padding: 8px 24px;
 }
 
 .team-color-strip {
-  width: 8px;
-  height: 46px;
-  border-radius: 4px;
+  width: 10px;
+  height: 56px;
+  border-radius: 5px;
   background: #2563eb;
 }
 
 .logo {
-  width: 46px;
-  height: 46px;
+  width: 56px; /* Logo ဆိုဒ်ကို 56px အထိ ချဲ့ထားခြင်း */
+  height: 56px;
   object-fit: contain;
 }
 
 .team-code {
-  font-size: 26px;
+  font-size: 32px; /* အသင်းအတိုကောက် စာလုံးကြီး */
   font-weight: 900;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
 }
 
 .score {
-  font-size: 36px;
+  font-size: 46px; /* ဂိုးအရေအတွက် အဝေးမှ အထင်းသားမြင်ရစေရန် */
   font-weight: 900;
   color: #facc15;
   background: #1e293b;
-  padding: 2px 16px;
-  border-radius: 8px;
-  min-width: 48px;
+  padding: 2px 20px;
+  border-radius: 10px;
+  min-width: 60px;
   text-align: center;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.7);
 }
 
 .clock-badge {
   background: #0284c7;
-  padding: 6px 20px;
+  padding: 8px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 125px;
+  min-width: 155px;
   height: 100%;
 }
 
 .time-txt {
-  font-size: 24px;
+  font-size: 30px; /* မိနစ်/စက္ကန့် စာလုံးအကြီး */
   font-weight: 900;
   color: #ffffff;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   line-height: 1.1;
 }
 
 .period-txt {
-  font-size: 12px;
+  font-size: 14px; /* ပွဲချိန်ပိုင်းပြ စာလုံး */
   font-weight: 800;
   text-transform: uppercase;
   color: #e0f2fe;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 /* =========================================
-   2. Tactical Pitch Layout (ဆိုဒ်ချဲ့ပြီး အောက်သို့ဆွဲချထားခြင်း)
+   2. Tactical Pitch Layout
    ========================================= */
 .lineups-container {
   position: absolute;
-  top: 75px; /* အပေါ်ကပ်မနေစေဘဲ အောက်သို့ အနေတော် ဆွဲချထားခြင်း */
+  top: 75px;
   left: 0;
   width: 100vw;
   display: flex;
@@ -126,10 +126,9 @@ body {
 }
 
 .pitch-card {
-  /* ကွင်းအရွယ်အစားကို ပိုမိုကြီးမားပြီး အချိုးကျစေရန် ပြင်ဆင်ခြင်း */
-  height: 68vh;
-  max-height: 560px;
-  min-height: 420px;
+  height: 65vh;
+  max-height: 540px;
+  min-height: 400px;
   aspect-ratio: 1 / 1.42;
   width: auto;
   background: rgba(10, 15, 29, 0.95);
@@ -142,7 +141,7 @@ body {
 }
 
 .streamer-center-gap {
-  flex: 1; /* အလယ်ကင်မရာအတွက် နေရာအပြည့်အဝရရှိစေခြင်း */
+  flex: 1; /* အလယ်ဗဟို လူမျက်နှာနှင့် ကင်မရာမြင်ကွင်း ရှင်းလင်းစေရန် */
 }
 
 .pitch-header {
@@ -356,7 +355,7 @@ body {
 .top-goal-net { top: 0; }
 
 /* =========================================
-   4. Jerseys (ရှင်းလင်းပြတ်သားသော အရွယ်အစား)
+   4. Jerseys
    ========================================= */
 .pitch-players {
   position: absolute;
@@ -411,35 +410,35 @@ body {
 }
 
 /* =========================================
-   5. Bottom Lineup Ticker (စာလုံးကြီးပြီး အဝေးမှ ရှင်းလင်းစွာ မြင်ရစေခြင်း)
+   5. Extra Large Bottom Lineup Ticker (စာတန်းပြေး ပိုကြီး/ထင်ရှားစေခြင်း)
    ========================================= */
 .lineup-ticker-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 48px; /* Ticker Bar အမြင့်ကို တိုးမြှင့်ထားခြင်း */
+  height: 56px; /* အမြင့်ကို 48px မှ 56px သို့ တိုးမြှင့်ထားခြင်း */
   background: rgba(10, 15, 29, 0.98);
-  border-top: 2.5px solid #0284c7;
+  border-top: 3px solid #0284c7;
   display: flex;
   align-items: center;
   overflow: hidden;
   z-index: 999;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.8);
 }
 
 .ticker-badge {
   background: #0284c7;
   color: #ffffff;
-  font-size: 15px;
+  font-size: 18px; /* LINEUPS Badge စာလုံးဆိုဒ် */
   font-weight: 900;
-  padding: 0 18px;
+  padding: 0 24px;
   height: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
   z-index: 10;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
 }
 
 .ticker-track {
@@ -452,9 +451,9 @@ body {
   display: inline-block;
   white-space: nowrap;
   padding-left: 100%;
-  animation: tickerScroll 38s linear infinite;
-  font-size: 17px; /* ဖုန်းဖြင့်ကြည့်လျှင်ပင် ကစားသမားနာမည်များ ထင်ရှားစွာ ဖတ်နိုင်ရန် */
-  font-weight: 700;
+  animation: tickerScroll 42s linear infinite;
+  font-size: 21px; /* ကစားသမားနှင့် နည်းပြစာလုံးများကို 17px မှ 21px သို့ တိုးမြှင့်ထားခြင်း */
+  font-weight: 800;
   color: #f8fafc;
 }
 
