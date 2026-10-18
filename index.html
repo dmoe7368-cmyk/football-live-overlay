@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Football Stream Overlay</title>
   <link rel="stylesheet" href="css/overlay.css">
+  <!-- Live Stats Frame Design CSS -->
+  <link rel="stylesheet" href="css/stats.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
-  <!-- Broadcast Scoreboard -->
+  <!-- 1. Broadcast Scoreboard -->
   <div class="scoreboard-wrapper">
     <div class="scoreboard" id="scoreboard" style="display: none;">
       <!-- Home Team -->
@@ -37,7 +39,7 @@
     </div>
   </div>
 
-  <!-- Tactical Pitch Lineups -->
+  <!-- 2. Tactical Pitch Lineups -->
   <div class="lineups-container" id="lineups-panel">
     
     <!-- Home Pitch (Left) -->
@@ -119,7 +121,33 @@
 
   </div>
 
-  <!-- Bottom Running Lineup Ticker Bar -->
+  <!-- 3. Live Match Stats Card (FotMob Data Frame) -->
+  <div class="stats-panel" id="stats-panel" style="display: none;">
+    <div class="stats-header">
+      <span class="stats-title">MATCH STATS</span>
+      <span class="stats-live-dot">LIVE</span>
+    </div>
+
+    <!-- Possession Bar -->
+    <div class="stat-row possession-row">
+      <div class="stat-labels">
+        <span id="stat-pos-home" class="val-home">50%</span>
+        <span class="stat-name">Possession</span>
+        <span id="stat-pos-away" class="val-away">50%</span>
+      </div>
+      <div class="possession-bar-wrap">
+        <div id="pos-bar-home" class="pos-bar home-bar" style="width: 50%;"></div>
+        <div id="pos-bar-away" class="pos-bar away-bar" style="width: 50%;"></div>
+      </div>
+    </div>
+
+    <!-- Other Stats (xG, Total Shots, Shots on Target, Passes, Corners, Saves) -->
+    <div class="stat-items-wrap" id="stat-items-list">
+      <!-- js/stats.js မှ အလိုအလျောက် ဖြည့်စွက်ပေးပါမည် -->
+    </div>
+  </div>
+
+  <!-- 4. Bottom Running Lineup Ticker Bar -->
   <div class="lineup-ticker-bar" id="lineup-ticker">
     <div class="ticker-badge">LINEUPS</div>
     <div class="ticker-track">
@@ -127,11 +155,13 @@
     </div>
   </div>
 
-  <!-- Firebase Script -->
+  <!-- Scripts များ ချိတ်ဆက်ခြင်း -->
   <script src="js/firebase-config.js"></script>
-  <!-- သီးသန့် Lineup Data ဖိုင် (ပွဲပြောင်းတိုင်း ဒီဖိုင်ကိုပဲ ပြင်မည်) -->
+  <!-- သီးသန့် Lineup Data ဖိုင် -->
   <script src="js/lineup.js"></script>
-  <!-- Overlay Script -->
+  <!-- Overlay Main Engine -->
   <script src="js/overlay.js"></script>
+  <!-- FotMob Live Stats Auto Engine -->
+  <script src="js/stats.js"></script>
 </body>
 </html>
