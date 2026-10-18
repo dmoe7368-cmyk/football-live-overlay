@@ -13,7 +13,7 @@ body {
 }
 
 /* =========================================
-   1. Broadcast Scoreboard (Logo ကြီးမားပြတ်သားစေခြင်း)
+   1. Broadcast Scoreboard
    ========================================= */
 .scoreboard-wrapper {
   position: absolute;
@@ -30,11 +30,11 @@ body {
   align-items: center;
   background: rgba(10, 15, 22, 0.98);
   border-radius: 18px;
-  border: 2.5px solid #76d400; /* Neon Lime Accent */
+  border: 2.5px solid #76d400;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.95), 0 0 20px rgba(118, 212, 0, 0.35);
   color: #fff;
   overflow: hidden;
-  height: 84px; /* Logo ကြီးကြီးထည့်ရန် အမြင့်ချဲ့ထားခြင်း */
+  height: 84px;
 }
 
 .team-badge {
@@ -51,9 +51,8 @@ body {
   background: #76d400;
 }
 
-/* Scoreboard Logo ကို အဝေးမှ အထင်းသားမြင်ရစေရန် အဝိုင်းခံ & Glow ထည့်ထားခြင်း */
 .logo {
-  width: 60px; /* 50px မှ 60px သို့ တိုးမြှင့်ထားခြင်း */
+  width: 60px;
   height: 60px;
   object-fit: contain;
   background: rgba(255, 255, 255, 0.12);
@@ -112,7 +111,6 @@ body {
   margin-top: 2px;
 }
 
-/* HT / FT ဖြစ်လျှင် မိနစ်ပျောက်ပြီး Status အကြီးပြသခြင်း */
 .clock-badge.status-only .time-txt {
   display: none !important;
 }
@@ -126,11 +124,11 @@ body {
 }
 
 /* =========================================
-   2. Tactical Pitch Layout (အမည်းဘောင်ဖျောက်ပြီး Team Color Name Plate တပ်ဆင်ခြင်း)
+   2. Tactical Pitch Columns & Layout
    ========================================= */
 .lineups-container {
   position: absolute;
-  top: 40px;
+  top: 35px;
   left: 0;
   width: 100vw;
   display: flex;
@@ -148,10 +146,16 @@ body {
   transform: translateY(0);
 }
 
+.pitch-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .pitch-card {
-  height: 74vh;
-  max-height: 610px;
-  min-height: 440px;
+  height: 68vh;
+  max-height: 570px;
+  min-height: 420px;
   aspect-ratio: 1 / 1.44;
   width: auto;
   background: transparent;
@@ -165,14 +169,12 @@ body {
   flex: 1;
 }
 
-/* Team Name Plate: အမည်းဘောင်ဖျောက်ပြီး အသင်းကာလာ Glow ဖြင့် လှပအောင်ဖန်တီးခြင်း */
 .pitch-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 14px;
+  padding: 7px 14px;
   border-radius: 14px 14px 0 0;
-  margin-bottom: 0;
   backdrop-filter: blur(8px);
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-bottom: none;
@@ -184,10 +186,9 @@ body {
   text-align: right;
 }
 
-/* Formation Header ပေါ်ရှိ Logo အကြီး (အဝိုင်းအကြည် & Glow ပါဝင်) */
 .mini-logo {
-  width: 40px; /* 26px မှ 40px သို့ သိသိသာသာ ချဲ့ထားခြင်း */
-  height: 40px;
+  width: 38px;
+  height: 38px;
   object-fit: contain;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 50%;
@@ -196,9 +197,8 @@ body {
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
 }
 
-/* Team Title စာလုံးကြီး & ထင်ရှားသော Contrast */
 .team-title {
-  font-size: 17px; /* စာလုံးအရွယ်အစား တိုးမြှင့်ထားခြင်း */
+  font-size: 16px;
   font-weight: 900;
   color: #ffffff;
   letter-spacing: 1px;
@@ -219,7 +219,41 @@ body {
 }
 
 /* =========================================
-   3. Green Pitch Field & Markings
+   Formation အောက်ရှိ Branding (Live Badge & DoePhaGyi Logo)
+   ========================================= */
+.bottom-branding-badge {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ဘယ်ဘက် Live Streaming Badge */
+.live-stream-badge-img {
+  width: 145px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85));
+  animation: pulseLive 2s infinite ease-in-out;
+}
+
+@keyframes pulseLive {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85)); }
+  50% { transform: scale(1.04); filter: drop-shadow(0 8px 22px rgba(239, 68, 68, 0.6)); }
+}
+
+/* ညာဘက် DOE PHAGYI Channel Logo */
+.channel-logo-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 16px rgba(118, 212, 0, 0.6));
+}
+
+/* =========================================
+   3. Pitch Field & Markings
    ========================================= */
 .pitch-field {
   flex: 1;
@@ -231,7 +265,7 @@ body {
     #15662d 28px,
     #15662d 56px
   );
-  border: 2.5px solid #76d400; /* Neon Lime Border */
+  border: 2.5px solid #76d400;
   border-top: 1.5px solid rgba(255, 255, 255, 0.4);
   border-radius: 0 0 14px 14px;
   overflow: hidden;
@@ -432,7 +466,7 @@ body {
 .pitch-row.row-5 .jersey-img, .pitch-row.row-five .jersey-img { width: 44px; height: 50px; }
 
 /* =========================================
-   5. Lineup Ticker Bar & Separators
+   5. Lineup Ticker Bar
    ========================================= */
 .lineup-ticker-bar {
   position: fixed;
