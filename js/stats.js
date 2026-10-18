@@ -1,10 +1,9 @@
 // ========================================================
-// FotMob App မှ Share Link ရယူပြီး Match ID ဂဏန်း ဒီနေရာတွင် ထည့်ပါ
-// (ဥပမာ ပွဲ Link ထဲမှ ဂဏန်း 4589210 ကို "4589210" ဟု ထည့်ပါက ချက်ချင်း တန်းမိပါမည်)
+// Leeds United vs Manchester United (Match ID: 4589210)
 // ========================================================
-const MANUAL_MATCH_ID = ""; 
+const MANUAL_MATCH_ID = "4589210"; 
 
-let currentStatsMatchId = MANUAL_MATCH_ID || null;
+let currentStatsMatchId = MANUAL_MATCH_ID;
 let statsFetchTimer = null;
 let isStatsVisibleByController = false;
 
@@ -33,7 +32,7 @@ matchRef.on('value', (snap) => {
 
   panel.style.display = 'block';
 
-  // Match ID ရရှိပါက တိုက်ရိုက်ဆွဲတင်ခြင်း
+  // သတ်မှတ်ထားသော Match ID ဖြင့် Live Stats တိုက်ရိုက်ဆွဲယူခြင်း
   const activeMatchId = data.fotmobMatchId || MANUAL_MATCH_ID;
   if (activeMatchId) {
     currentStatsMatchId = activeMatchId;
@@ -44,11 +43,10 @@ matchRef.on('value', (snap) => {
       if (isStatsVisibleByController && currentStatsMatchId) {
         fetchMatchStatsData(currentStatsMatchId);
       }
-    }, 25000); // ၂၅ စက္ကန့်တစ်ကြိမ် Auto Update
+    }, 20000); // ၂၀ စက္ကန့်တစ်ကြိမ် Auto Update
     return;
   }
 
-  // ID မထည့်ထားပါက အလိုအလျောက် ရှာဖွေခြင်း
   const hName = FOTMOB_TEAM_NAMES[data.homeKey] || data.homeName || "Leeds";
   const aName = FOTMOB_TEAM_NAMES[data.awayKey] || data.awayName || "Man United";
   loadMatchStats(hName, aName);
@@ -90,7 +88,7 @@ async function fetchMatchStatsData(matchId) {
   }
 }
 
-// FotMob မှ အလိုအလျောက် ရှာဖွေခြင်း
+// FotMob မှ အလိုအလျောက် ရှာဖွေခြင်း (Fallback)
 async function loadMatchStats(homeTeamName, awayTeamName) {
   try {
     const leagueApi = `https://www.fotmob.com/api/leagues?id=47`;
@@ -114,7 +112,7 @@ async function loadMatchStats(homeTeamName, awayTeamName) {
         if (isStatsVisibleByController && currentStatsMatchId) {
           fetchMatchStatsData(currentStatsMatchId);
         }
-      }, 25000);
+      }, 20000);
     } else {
       renderDisplayStats(null, "LIVE");
     }
@@ -143,7 +141,7 @@ function renderDisplayStats(statsGroups, badgeText = "LIVE") {
     });
   }
 
-  // 1. Possession Bar (ဥပမာ 64% vs 36%)
+  // 1. Possession Bar
   const pos = statsMap["ball possession"] || { home: "64%", away: "36%" };
   const hPos = parseInt(pos.home) || 64;
   const aPos = parseInt(pos.away) || 36;
