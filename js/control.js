@@ -60,9 +60,9 @@ function initDropdowns() {
     aForm.add(new Option(f, f));
   });
 
-  hTeam.value = 'che';
-  aTeam.value = 'bou';
-  hForm.value = '3-4-2-1';
+  hTeam.value = 'bre';
+  aTeam.value = 'liv';
+  hForm.value = '4-2-3-1';
   aForm.value = '4-2-3-1';
 }
 
@@ -75,18 +75,30 @@ matchRef.on('value', (snap) => {
   current = data;
 
   // Scoreboard Text & Logos
-  document.getElementById('ctrl-h-short').textContent = data.homeShort || 'CHE';
-  document.getElementById('ctrl-a-short').textContent = data.awayShort || 'BOU';
-  document.getElementById('ctrl-h-score').textContent = data.homeScore ?? 0;
-  document.getElementById('ctrl-a-score').textContent = data.awayScore ?? 0;
-  document.getElementById('ctrl-h-logo').src = `assets/logos/${data.homeKey || 'che'}.png`;
-  document.getElementById('ctrl-a-logo').src = `assets/logos/${data.awayKey || 'bou'}.png`;
+  const hShortEl = document.getElementById('ctrl-h-short');
+  const aShortEl = document.getElementById('ctrl-a-short');
+  const hScoreEl = document.getElementById('ctrl-h-score');
+  const aScoreEl = document.getElementById('ctrl-a-score');
+  const hLogoEl = document.getElementById('ctrl-h-logo');
+  const aLogoEl = document.getElementById('ctrl-a-logo');
+
+  if (hShortEl) hShortEl.textContent = data.homeShort || 'BRE';
+  if (aShortEl) aShortEl.textContent = data.awayShort || 'LIV';
+  if (hScoreEl) hScoreEl.textContent = data.homeScore ?? 0;
+  if (aScoreEl) aScoreEl.textContent = data.awayScore ?? 0;
+  if (hLogoEl) hLogoEl.src = `assets/logos/${data.homeKey || 'bre'}.png`;
+  if (aLogoEl) aLogoEl.src = `assets/logos/${data.awayKey || 'liv'}.png`;
 
   // Selectors Sync
-  if (data.homeKey) document.getElementById('home-team-select').value = data.homeKey;
-  if (data.awayKey) document.getElementById('away-team-select').value = data.awayKey;
-  if (data.homeFormation) document.getElementById('home-formation-select').value = data.homeFormation;
-  if (data.awayFormation) document.getElementById('away-formation-select').value = data.awayFormation;
+  const hTeamSel = document.getElementById('home-team-select');
+  const aTeamSel = document.getElementById('away-team-select');
+  const hFormSel = document.getElementById('home-formation-select');
+  const aFormSel = document.getElementById('away-formation-select');
+
+  if (hTeamSel && data.homeKey) hTeamSel.value = data.homeKey;
+  if (aTeamSel && data.awayKey) aTeamSel.value = data.awayKey;
+  if (hFormSel && data.homeFormation) hFormSel.value = data.homeFormation;
+  if (aFormSel && data.awayFormation) aFormSel.value = data.awayFormation;
 
   renderClock();
   clearInterval(ctrlTimerInterval);
@@ -97,20 +109,46 @@ matchRef.on('value', (snap) => {
 
 // Timer Clock Display
 function renderClock() {
+  const clockEl = document.getElementById('ctrl-clock');
+  if (!clockEl) return;
+
+  const pUpper = (current.period || '').toUpperCase().trim();
+
+  // Half Time သို့မဟုတ် Full Time ဖြစ်နေပါက မိနစ်များဖျောက်ပြီး စာတန်းသာ ပြသခြင်း
+  if (pUpper === 'HT' || pUpper === 'HALF TIME') {
+    clockEl.textContent = 'HALF TIME';
+    clockEl.style.fontSize = '26px';
+    return;
+  }
+  if (pUpper === 'FT' || pUpper === 'FULL TIME') {
+    clockEl.textContent = 'FULL TIME';
+    clockEl.style.fontSize = '26px';
+    return;
+  }
+
+  clockEl.style.fontSize = '42px';
   let total = current.timer?.baseSeconds || 0;
   if (current.timer?.isRunning) {
     total += Math.floor((Date.now() - (current.timer?.startTime || Date.now())) / 1000);
   }
   const mins = Math.floor(total / 60);
   const secs = total % 60;
-  document.getElementById('ctrl-clock').textContent =
-    `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  clockEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
 // Timer Functions
 function startTimer() {
   if (current.timer?.isRunning) return;
-  matchRef.child('timer').update({ isRunning: true, startTime: Date.now() });
+
+  const updates = { isRunning: true, startTime: Date.now() };
+  const pUpper = (current.period || '').toUpperCase().trim();
+
+  // Half Time မှ ပြန်စပါက အလိုအလျောက် 2nd Half သို့ ပြောင်းပေးခြင်း
+  if (pUpper === 'HT' || pUpper === 'HALF TIME') {
+    matchRef.update({ period: '2nd Half' });
+  }
+
+  matchRef.child('timer').update(updates);
 }
 
 function pauseTimer() {
@@ -124,10 +162,14 @@ function pauseTimer() {
 
 function resetTimer() {
   matchRef.child('timer').update({ isRunning: false, baseSeconds: 0, startTime: Date.now() });
+  matchRef.update({ period: '1st Half' });
 }
 
 function setTimerMin(min) {
   matchRef.child('timer').update({ isRunning: false, baseSeconds: min * 60, startTime: Date.now() });
+  if (min === 45) {
+    matchRef.update({ period: '2nd Half' });
+  }
 }
 
 // Custom Minute & Second Edit တိုက်ရိုက်သတ်မှတ်ခြင်း
@@ -135,8 +177,8 @@ function applyCustomTime() {
   const minInput = document.getElementById('input-custom-min');
   const secInput = document.getElementById('input-custom-sec');
 
-  const min = parseInt(minInput.value, 10) || 0;
-  const sec = parseInt(secInput.value, 10) || 0;
+  const min = parseInt(minInput?.value, 10) || 0;
+  const sec = parseInt(secInput?.value, 10) || 0;
   const totalSeconds = (min * 60) + sec;
 
   matchRef.child('timer').update({
@@ -144,13 +186,26 @@ function applyCustomTime() {
     startTime: Date.now()
   });
 
-  // Input Box ထဲရှိ တန်ဖိုးများကို ရှင်းလင်းပေးခြင်း
-  minInput.value = '';
-  secInput.value = '';
+  if (minInput) minInput.value = '';
+  if (secInput) secInput.value = '';
 }
 
-// Match Period & Status Functions (1st Half, HT, 2nd Half, FT, 45 Min, 90 Min, Full Time)
+// Match Period & Status Functions (HT, FT တွင် မိနစ်ဖျောက်စေရန် စာတန်းတိကျစွာ ပို့ပေးခြင်း)
 function setPeriod(period) {
+  const pUpper = period.toUpperCase().trim();
+
+  if (pUpper === 'HT' || pUpper === 'HALF TIME') {
+    pauseTimer();
+    matchRef.update({ period: 'HALF TIME' });
+    return;
+  }
+
+  if (pUpper === 'FT' || pUpper === 'FULL TIME') {
+    pauseTimer();
+    matchRef.update({ period: 'FULL TIME' });
+    return;
+  }
+
   matchRef.update({ period });
 }
 
@@ -205,21 +260,21 @@ function saveTeamsAndFormations() {
   });
 }
 
-// Reset Match Function (Lineup နှင့် Ticker နှစ်ခုလုံး ပြန်လည်အသက်ဝင်စေခြင်း)
+// Reset Match Function
 function resetAllMatch() {
   if (confirm("ပွဲစဉ်အချက်အလက် အားလုံးကို Reset ပြုလုပ်မှာ သေချာပါသလား?")) {
     matchRef.set({
-      homeKey: "che",
-      homeName: "Chelsea",
-      homeShort: "CHE",
-      homeColor: "#034694",
+      homeKey: "bre",
+      homeName: "Brentford",
+      homeShort: "BRE",
+      homeColor: "#D20000",
       homeScore: 0,
-      homeFormation: "3-4-2-1",
+      homeFormation: "4-2-3-1",
 
-      awayKey: "bou",
-      awayName: "Bournemouth",
-      awayShort: "BOU",
-      awayColor: "#DA291C",
+      awayKey: "liv",
+      awayName: "Liverpool",
+      awayShort: "LIV",
+      awayColor: "#C8102E",
       awayScore: 0,
       awayFormation: "4-2-3-1",
 
