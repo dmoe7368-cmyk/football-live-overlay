@@ -124,11 +124,12 @@ body {
 }
 
 /* =========================================
-   2. Tactical Pitch Columns & Layout
+   2. Tactical Pitch Columns & Layout (Logo များ အလယ်ကျစေရန် ချိန်ညှိမှု)
    ========================================= */
 .lineups-container {
   position: absolute;
   top: 35px;
+  bottom: 56px; /* အောက်ခြေ Ticker Bar (56px) အထိ တိကျစွာ အချိုးညီ ဆွဲဆန့်ထားခြင်း */
   left: 0;
   width: 100vw;
   display: flex;
@@ -150,12 +151,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%; /* ကွင်းနှင့် အောက်ခြေကြား အမြင့်အပြည့် ယူထားခြင်း */
 }
 
 .pitch-card {
-  height: 68vh;
-  max-height: 570px;
-  min-height: 420px;
+  flex-shrink: 0; /* ကွင်းအရွယ်အစား ကျုံ့မသွားစေရန် */
+  height: 66vh;
+  max-height: 550px;
+  min-height: 400px;
   aspect-ratio: 1 / 1.44;
   width: auto;
   background: transparent;
@@ -219,19 +222,21 @@ body {
 }
 
 /* =========================================
-   Formation အောက်ရှိ Branding (Live Badge & DoePhaGyi Logo)
+   Formation အောက်နှင့် Lineup Ticker ကြား ဗဟိုတည့်တည့် (Center) နေရာချခြင်း
    ========================================= */
 .bottom-branding-badge {
-  margin-top: 10px;
+  flex: 1; /* ကွင်းအောက်ခြေမှ Lineup Ticker အထိ နေရာလွတ် အားလုံးကို အပြည့်ယူခြင်း */
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* အပေါ်/အောက် ဗဟိုတည့်တည့် Center ချခြင်း */
+  justify-content: center; /* ဘယ်/ညာ Center ချခြင်း */
   pointer-events: none;
+  padding: 8px 0;
 }
 
 /* ဘယ်ဘက် Live Streaming Badge */
 .live-stream-badge-img {
-  width: 145px;
+  width: 140px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85));
@@ -240,13 +245,13 @@ body {
 
 @keyframes pulseLive {
   0%, 100% { transform: scale(1); filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.85)); }
-  50% { transform: scale(1.04); filter: drop-shadow(0 8px 22px rgba(239, 68, 68, 0.6)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 8px 22px rgba(239, 68, 68, 0.6)); }
 }
 
 /* ညာဘက် DOE PHAGYI Channel Logo */
 .channel-logo-img {
-  width: 90px;
-  height: 90px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
   border-radius: 50%;
   filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 16px rgba(118, 212, 0, 0.6));
