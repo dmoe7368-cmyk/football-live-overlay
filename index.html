@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Football Stream Overlay</title>
   <link rel="stylesheet" href="css/overlay.css">
-  <!-- Live Stats Frame Design CSS -->
   <link rel="stylesheet" href="css/stats.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -19,14 +18,14 @@
       <div class="team-badge home">
         <div class="team-color-strip" id="home-strip"></div>
         <img id="home-logo" class="logo" src="" alt="">
-        <span class="team-code" id="home-code">BRE</span>
+        <span class="team-code" id="home-code">LEE</span>
         <span class="score" id="home-score">0</span>
       </div>
 
       <!-- Away Team -->
       <div class="team-badge away">
         <span class="score" id="away-score">0</span>
-        <span class="team-code" id="away-code">LIV</span>
+        <span class="team-code" id="away-code">MUN</span>
         <img id="away-logo" class="logo" src="" alt="">
         <div class="team-color-strip" id="away-strip"></div>
       </div>
@@ -43,39 +42,46 @@
   <div class="lineups-container" id="lineups-panel">
     
     <!-- Home Pitch (Left) -->
-    <div class="pitch-card left-pitch">
-      <div class="pitch-header">
-        <img id="lu-home-logo" class="mini-logo" src="" alt="">
-        <div>
-          <div class="team-title" id="lu-home-name">BRENTFORD</div>
-          <span class="formation-tag" id="lu-home-form">4-2-3-1</span>
+    <div class="pitch-column left-col">
+      <div class="pitch-card left-pitch">
+        <div class="pitch-header">
+          <img id="lu-home-logo" class="mini-logo" src="" alt="">
+          <div>
+            <div class="team-title" id="lu-home-name">LEEDS UNITED</div>
+            <span class="formation-tag" id="lu-home-form">3-5-2</span>
+          </div>
+        </div>
+        
+        <!-- Pitch Field -->
+        <div class="pitch-field">
+          <div class="pitch-markings">
+            <div class="halfway-line"></div>
+            <div class="center-circle"></div>
+            <div class="center-spot"></div>
+
+            <div class="top-goal-net"></div>
+            <div class="top-penalty-box"></div>
+            <div class="top-goal-box"></div>
+            <div class="top-penalty-arc"></div>
+            <div class="top-penalty-spot"></div>
+            <div class="corner-arc top-left"></div>
+            <div class="corner-arc top-right"></div>
+
+            <div class="bottom-penalty-arc"></div>
+            <div class="bottom-penalty-box"></div>
+            <div class="bottom-goal-box"></div>
+            <div class="bottom-penalty-spot"></div>
+            <div class="corner-arc bottom-left"></div>
+            <div class="corner-arc bottom-right"></div>
+            <div class="bottom-goal-net"></div>
+          </div>
+          <div class="pitch-players" id="home-pitch-players"></div>
         </div>
       </div>
-      
-      <!-- Green Pitch with Full Markings -->
-      <div class="pitch-field">
-        <div class="pitch-markings">
-          <div class="halfway-line"></div>
-          <div class="center-circle"></div>
-          <div class="center-spot"></div>
 
-          <div class="top-goal-net"></div>
-          <div class="top-penalty-box"></div>
-          <div class="top-goal-box"></div>
-          <div class="top-penalty-arc"></div>
-          <div class="top-penalty-spot"></div>
-          <div class="corner-arc top-left"></div>
-          <div class="corner-arc top-right"></div>
-
-          <div class="bottom-penalty-arc"></div>
-          <div class="bottom-penalty-box"></div>
-          <div class="bottom-goal-box"></div>
-          <div class="bottom-penalty-spot"></div>
-          <div class="corner-arc bottom-left"></div>
-          <div class="corner-arc bottom-right"></div>
-          <div class="bottom-goal-net"></div>
-        </div>
-        <div class="pitch-players" id="home-pitch-players"></div>
+      <!-- ဘယ်ဘက် Formation အောက်တွင် ပြသမည့် Live Streaming Badge -->
+      <div class="bottom-branding-badge left-branding">
+        <img src="assets/live-badge.png" alt="Live Streaming" class="live-stream-badge-img">
       </div>
     </div>
 
@@ -83,52 +89,58 @@
     <div class="streamer-center-gap"></div>
 
     <!-- Away Pitch (Right) -->
-    <div class="pitch-card right-pitch">
-      <div class="pitch-header reverse">
-        <img id="lu-away-logo" class="mini-logo" src="" alt="">
-        <div>
-          <div class="team-title" id="lu-away-name">LIVERPOOL</div>
-          <span class="formation-tag" id="lu-away-form">4-2-3-1</span>
+    <div class="pitch-column right-col">
+      <div class="pitch-card right-pitch">
+        <div class="pitch-header reverse">
+          <img id="lu-away-logo" class="mini-logo" src="" alt="">
+          <div>
+            <div class="team-title" id="lu-away-name">MAN UNITED</div>
+            <span class="formation-tag" id="lu-away-form">4-2-3-1</span>
+          </div>
+        </div>
+        
+        <!-- Pitch Field -->
+        <div class="pitch-field">
+          <div class="pitch-markings">
+            <div class="halfway-line"></div>
+            <div class="center-circle"></div>
+            <div class="center-spot"></div>
+
+            <div class="top-goal-net"></div>
+            <div class="top-penalty-box"></div>
+            <div class="top-goal-box"></div>
+            <div class="top-penalty-arc"></div>
+            <div class="top-penalty-spot"></div>
+            <div class="corner-arc top-left"></div>
+            <div class="corner-arc top-right"></div>
+
+            <div class="bottom-penalty-arc"></div>
+            <div class="bottom-penalty-box"></div>
+            <div class="bottom-goal-box"></div>
+            <div class="bottom-penalty-spot"></div>
+            <div class="corner-arc bottom-left"></div>
+            <div class="corner-arc bottom-right"></div>
+            <div class="bottom-goal-net"></div>
+          </div>
+          <div class="pitch-players" id="away-pitch-players"></div>
         </div>
       </div>
-      
-      <!-- Green Pitch with Full Markings -->
-      <div class="pitch-field">
-        <div class="pitch-markings">
-          <div class="halfway-line"></div>
-          <div class="center-circle"></div>
-          <div class="center-spot"></div>
 
-          <div class="top-goal-net"></div>
-          <div class="top-penalty-box"></div>
-          <div class="top-goal-box"></div>
-          <div class="top-penalty-arc"></div>
-          <div class="top-penalty-spot"></div>
-          <div class="corner-arc top-left"></div>
-          <div class="corner-arc top-right"></div>
-
-          <div class="bottom-penalty-arc"></div>
-          <div class="bottom-penalty-box"></div>
-          <div class="bottom-goal-box"></div>
-          <div class="bottom-penalty-spot"></div>
-          <div class="corner-arc bottom-left"></div>
-          <div class="corner-arc bottom-right"></div>
-          <div class="bottom-goal-net"></div>
-        </div>
-        <div class="pitch-players" id="away-pitch-players"></div>
+      <!-- ညာဘက် Formation အောက်တွင် ပြသမည့် DOE PHAGYI Logo -->
+      <div class="bottom-branding-badge right-branding">
+        <img src="assets/channel-logo.png" alt="DoePhaGyi" class="channel-logo-img">
       </div>
     </div>
 
   </div>
 
-  <!-- 3. Live Match Stats Card (FotMob Data Frame) -->
+  <!-- 3. Live Match Stats Card -->
   <div class="stats-panel" id="stats-panel" style="display: none;">
     <div class="stats-header">
       <span class="stats-title">MATCH STATS</span>
       <span class="stats-live-dot">LIVE</span>
     </div>
 
-    <!-- Possession Bar -->
     <div class="stat-row possession-row">
       <div class="stat-labels">
         <span id="stat-pos-home" class="val-home">50%</span>
@@ -141,10 +153,7 @@
       </div>
     </div>
 
-    <!-- Other Stats (xG, Total Shots, Shots on Target, Passes, Corners, Saves) -->
-    <div class="stat-items-wrap" id="stat-items-list">
-      <!-- js/stats.js မှ အလိုအလျောက် ဖြည့်စွက်ပေးပါမည် -->
-    </div>
+    <div class="stat-items-wrap" id="stat-items-list"></div>
   </div>
 
   <!-- 4. Bottom Running Lineup Ticker Bar -->
@@ -155,13 +164,9 @@
     </div>
   </div>
 
-  <!-- Scripts များ ချိတ်ဆက်ခြင်း -->
   <script src="js/firebase-config.js"></script>
-  <!-- သီးသန့် Lineup Data ဖိုင် -->
   <script src="js/lineup.js"></script>
-  <!-- Overlay Main Engine -->
   <script src="js/overlay.js"></script>
-  <!-- FotMob Live Stats Auto Engine -->
   <script src="js/stats.js"></script>
 </body>
 </html>
