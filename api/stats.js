@@ -13,19 +13,20 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: "Match ID is required" });
   }
 
-  // FotMob Mobile App Endpoint နှင့် Web Endpoint နှစ်မျိုးလုံး ချိတ်ဆက်မည့် လမ်းကြောင်းများ
-  const targetUrls = [
-    `https://pub.fotmob.com/prod/pub/api/v2/matchDetails?matchId=${targetId}`,
-    `https://www.fotmob.com/api/matchDetails?matchId=${targetId}`
+  const rawUrl = `https://www.fotmob.com/api/matchDetails?matchId=${targetId}`;
+
+  // Vercel IP Block မဖြစ်စေရန် ပြင်ပ Cloudflare Bypass Proxy များမှတစ်ဆင့် လှမ်းဆွဲခြင်း
+  const proxyEndpoints = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`,
+    `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rawUrl)}`
   ];
 
-  for (const url of targetUrls) {
+  for (const pUrl of proxyEndpoints) {
     try {
-      const response = await fetch(url, {
+      const response = await fetch(pUrl, {
         headers: {
-          "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
-          "Accept": "application/json",
-          "Cache-Control": "no-cache"
+          "Accept": "application/json"
         }
       });
 
@@ -34,9 +35,12 @@ module.exports = async (req, res) => {
         return res.status(200).json(data);
       }
     } catch (e) {
-      console.warn("Retrying next endpoint...", e);
+      // Proxy တစ်ခု မရပါက နောက်တစ်ခုသို့ ဆက်လက်ကြိုးစားမည်
     }
   }
 
-  return res.status(500).json({ error: "Failed to fetch from FotMob endpoints" });
+  return res.status(500).json({ 
+    error: "All proxy endpoints failed", 
+    matchId: targetId 
+  });
 };
