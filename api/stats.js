@@ -7,34 +7,36 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // id သို့မဟုတ် matchId နှစ်မျိုးလုံးကို လက်ခံခြင်း
   const targetId = req.query.id || req.query.matchId;
 
   if (!targetId) {
-    return res.status(400).json({ error: "Match ID is required (e.g. ?id=5795480)" });
+    return res.status(400).json({ error: "Match ID is required" });
   }
 
-  try {
-    // FotMob Endpoint သည် ?id= ဖြစ်ပါသည်
-    const fotmobUrl = `https://www.fotmob.com/api/matchDetails?id=${targetId}`;
-    
-    const response = await fetch(fotmobUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "application/json, text/plain, */*",
-        "Referer": "https://www.fotmob.com/",
-        "Cache-Control": "no-cache"
+  // FotMob Mobile App Endpoint နှင့် Web Endpoint နှစ်မျိုးလုံး ချိတ်ဆက်မည့် လမ်းကြောင်းများ
+  const targetUrls = [
+    `https://pub.fotmob.com/prod/pub/api/v2/matchDetails?matchId=${targetId}`,
+    `https://www.fotmob.com/api/matchDetails?matchId=${targetId}`
+  ];
+
+  for (const url of targetUrls) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+          "Accept": "application/json",
+          "Cache-Control": "no-cache"
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return res.status(200).json(data);
       }
-    });
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: `FotMob returned ${response.status}`, url: fotmobUrl });
+    } catch (e) {
+      console.warn("Retrying next endpoint...", e);
     }
-
-    const data = await response.json();
-    return res.status(200).json(data);
-
-  } catch (error) {
-    return res.status(500).json({ error: "Serverless Fetch Error", details: error.message });
   }
+
+  return res.status(500).json({ error: "Failed to fetch from FotMob endpoints" });
 };
