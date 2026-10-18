@@ -32,7 +32,7 @@ matchRef.on('value', (snap) => {
   document.getElementById('home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
   document.getElementById('away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
 
-  // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ခြင်း)
+  // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ပြီး စာတန်းသာ ပြသခြင်း)
   const currentPeriod = (data.period || '1st Half').trim();
   const periodEl = document.getElementById('match-period');
   const clockBadgeEl = document.querySelector('.clock-badge');
@@ -137,24 +137,36 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Position အလိုက် (GK, DEF, MID, FWD) ခွဲထုတ်ပြသသည့် Ticker Renderer
+// Lineup Scroll Ticker (GK, DEF, MID, FWD အလိုအလျောက် ခွဲထုတ်ပြသခြင်း)
 function renderLineupTicker(homeKey, awayKey) {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
 
-  const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') ? CURRENT_MATCH_LINEUPS : {};
+  const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') ? CURRENT_MATCH_LINEUPS : (window.CURRENT_MATCH_LINEUPS || {});
   const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase() };
   const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase() };
 
   function formatTeamLineup(team) {
     if (!team) return "Lineup TBA";
     let parts = [];
+
+    // ၁။ အကယ်၍ gk, def, mid, fwd သီးသန့် ခွဲထားပါက
     if (team.gk && team.gk.length) parts.push(`<span class="pos-tag pos-gk">GK</span> ${team.gk.join(', ')}`);
     if (team.def && team.def.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${team.def.join(', ')}`);
     if (team.mid && team.mid.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${team.mid.join(', ')}`);
     if (team.fwd && team.fwd.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${team.fwd.join(', ')}`);
-    if (team.manager) parts.push(`<span style="color:#76d400; font-weight:800; margin-left:10px;">[Coach: ${team.manager}]</span>`);
-    return parts.join(' &nbsp;•&nbsp; ');
+
+    // ၂။ အကယ်၍ lineup: [...] တစ်စုတည်း ရေးထားပါက (မပျောက်သွားစေရန် အလိုအလျောက် ပြသပေးခြင်း)
+    if (parts.length === 0 && team.lineup && team.lineup.length) {
+      parts.push(team.lineup.join(' &nbsp;•&nbsp; '));
+    }
+
+    // နည်းပြ (Coach)
+    if (team.manager) {
+      parts.push(`<span style="color:#76d400; font-weight:800; margin-left:8px;">[Coach: ${team.manager}]</span>`);
+    }
+
+    return parts.length ? parts.join(' &nbsp;&nbsp;•&nbsp;&nbsp; ') : "Lineup TBA";
   }
 
   const hHtml = formatTeamLineup(hTeam);
