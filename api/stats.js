@@ -1,5 +1,5 @@
-export default async function handler(req, res) {
-  // CORS ခွင့်ပြုချက် ပေးခြင်း (မည်သည့်နေရာကမဆို လှမ်းခေါ်နိုင်ရန်)
+module.exports = async (req, res) => {
+  // CORS ခွင့်ပြုချက် အားလုံး ဖွင့်ပေးခြင်း
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -8,7 +8,6 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // URL Query ထဲမှ matchId ကို ယူခြင်း (ဥပမာ ?matchId=5795480)
   const { matchId } = req.query;
 
   if (!matchId) {
@@ -16,9 +15,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    // FotMob က Block မလုပ်စေရန် Real Browser Header များ ထည့်သွင်းခြင်း
     const fotmobUrl = `https://www.fotmob.com/api/matchDetails?matchId=${matchId}`;
     
+    // FotMob မပိတ်စေရန် Browser Header များ ထည့်သွင်းခြင်း
     const response = await fetch(fotmobUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -29,14 +28,13 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      throw new Error(`FotMob responded with status ${response.status}`);
+      return res.status(response.status).json({ error: `FotMob returned ${response.status}` });
     }
 
     const data = await response.json();
     return res.status(200).json(data);
 
   } catch (error) {
-    console.error("Vercel Proxy Error:", error);
-    return res.status(500).json({ error: "Failed to fetch FotMob data", details: error.message });
+    return res.status(500).json({ error: "Serverless Fetch Error", details: error.message });
   }
-}
+};
