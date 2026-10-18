@@ -60,9 +60,9 @@ function initDropdowns() {
     aForm.add(new Option(f, f));
   });
 
-  hTeam.value = 'bre';
-  aTeam.value = 'liv';
-  hForm.value = '4-2-3-1';
+  hTeam.value = 'lee';
+  aTeam.value = 'mun';
+  hForm.value = '3-5-2';
   aForm.value = '4-2-3-1';
 }
 
@@ -82,12 +82,12 @@ matchRef.on('value', (snap) => {
   const hLogoEl = document.getElementById('ctrl-h-logo');
   const aLogoEl = document.getElementById('ctrl-a-logo');
 
-  if (hShortEl) hShortEl.textContent = data.homeShort || 'BRE';
-  if (aShortEl) aShortEl.textContent = data.awayShort || 'LIV';
+  if (hShortEl) hShortEl.textContent = data.homeShort || 'LEE';
+  if (aShortEl) aShortEl.textContent = data.awayShort || 'MUN';
   if (hScoreEl) hScoreEl.textContent = data.homeScore ?? 0;
   if (aScoreEl) aScoreEl.textContent = data.awayScore ?? 0;
-  if (hLogoEl) hLogoEl.src = `assets/logos/${data.homeKey || 'bre'}.png`;
-  if (aLogoEl) aLogoEl.src = `assets/logos/${data.awayKey || 'liv'}.png`;
+  if (hLogoEl) hLogoEl.src = `assets/logos/${data.homeKey || 'lee'}.png`;
+  if (aLogoEl) aLogoEl.src = `assets/logos/${data.awayKey || 'mun'}.png`;
 
   // Selectors Sync
   const hTeamSel = document.getElementById('home-team-select');
@@ -238,6 +238,15 @@ function toggleTicker(show) {
   }
 }
 
+// FotMob Live Match Stats Frame Toggle (Show / Hide)
+function toggleStats(show) {
+  if (typeof show === 'boolean') {
+    matchRef.update({ showStats: show });
+  } else {
+    matchRef.update({ showStats: !current.showStats });
+  }
+}
+
 // Save Teams & Formations
 function saveTeamsAndFormations() {
   const hKey = document.getElementById('home-team-select').value;
@@ -264,23 +273,24 @@ function saveTeamsAndFormations() {
 function resetAllMatch() {
   if (confirm("ပွဲစဉ်အချက်အလက် အားလုံးကို Reset ပြုလုပ်မှာ သေချာပါသလား?")) {
     matchRef.set({
-      homeKey: "bre",
-      homeName: "Brentford",
-      homeShort: "BRE",
-      homeColor: "#D20000",
+      homeKey: "lee",
+      homeName: "Leeds United",
+      homeShort: "LEE",
+      homeColor: "#1D428A",
       homeScore: 0,
-      homeFormation: "4-2-3-1",
+      homeFormation: "3-5-2",
 
-      awayKey: "liv",
-      awayName: "Liverpool",
-      awayShort: "LIV",
-      awayColor: "#C8102E",
+      awayKey: "mun",
+      awayName: "Man United",
+      awayShort: "MUN",
+      awayColor: "#DA291C",
       awayScore: 0,
       awayFormation: "4-2-3-1",
 
       period: "1st Half",
       showLineup: true,
       showTicker: true,
+      showStats: false,
       timer: {
         baseSeconds: 0,
         isRunning: false,
