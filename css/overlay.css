@@ -13,7 +13,7 @@ body {
 }
 
 /* =========================================
-   1. Broadcast Scoreboard (DOE PHAGYI Theme)
+   1. Broadcast Scoreboard (Logo ကြီးမားပြတ်သားစေခြင်း)
    ========================================= */
 .scoreboard-wrapper {
   position: absolute;
@@ -29,48 +29,54 @@ body {
   display: inline-flex;
   align-items: center;
   background: rgba(10, 15, 22, 0.98);
-  border-radius: 16px;
+  border-radius: 18px;
   border: 2.5px solid #76d400; /* Neon Lime Accent */
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.9), 0 0 18px rgba(118, 212, 0, 0.35);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.95), 0 0 20px rgba(118, 212, 0, 0.35);
   color: #fff;
   overflow: hidden;
-  height: 78px;
+  height: 84px; /* Logo ကြီးကြီးထည့်ရန် အမြင့်ချဲ့ထားခြင်း */
 }
 
 .team-badge {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 6px 20px;
+  gap: 14px;
+  padding: 6px 22px;
 }
 
 .team-color-strip {
   width: 8px;
-  height: 48px;
+  height: 52px;
   border-radius: 4px;
   background: #76d400;
 }
 
+/* Scoreboard Logo ကို အဝေးမှ အထင်းသားမြင်ရစေရန် အဝိုင်းခံ & Glow ထည့်ထားခြင်း */
 .logo {
-  width: 50px;
-  height: 50px;
+  width: 60px; /* 50px မှ 60px သို့ တိုးမြှင့်ထားခြင်း */
+  height: 60px;
   object-fit: contain;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  padding: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
 }
 
 .team-code {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 900;
   letter-spacing: 1.5px;
 }
 
 .score {
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 900;
   color: #76d400;
   background: #141a24;
   padding: 2px 18px;
   border-radius: 10px;
-  min-width: 54px;
+  min-width: 56px;
   text-align: center;
   box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
   border: 1px solid rgba(118, 212, 0, 0.3);
@@ -79,12 +85,12 @@ body {
 .clock-badge {
   background: linear-gradient(135deg, #166534 0%, #15803d 100%);
   border-left: 2px solid #76d400;
-  padding: 6px 22px;
+  padding: 6px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
+  min-width: 155px;
   height: 100%;
 }
 
@@ -120,16 +126,16 @@ body {
 }
 
 /* =========================================
-   2. Tactical Pitch Layout (Theme အစိမ်းရောင် ဘောင်လှလှဖြင့် ပြင်ဆင်ခြင်း)
+   2. Tactical Pitch Layout (အမည်းဘောင်ဖျောက်ပြီး Team Color Name Plate တပ်ဆင်ခြင်း)
    ========================================= */
 .lineups-container {
   position: absolute;
-  top: 45px;
+  top: 40px;
   left: 0;
   width: 100vw;
   display: flex;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 35px;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-8px);
@@ -143,34 +149,34 @@ body {
 }
 
 .pitch-card {
-  height: 72vh;
-  max-height: 600px;
+  height: 74vh;
+  max-height: 610px;
   min-height: 440px;
   aspect-ratio: 1 / 1.44;
   width: auto;
-  background: rgba(10, 17, 24, 0.92);
-  border: 2.5px solid #76d400; /* Theme အစိမ်းရောင် Glow ဘောင် */
-  border-radius: 16px;
-  padding: 6px;
+  background: transparent;
+  border: none;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(118, 212, 0, 0.35); /* Neon Green Glow */
+  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.95));
 }
 
 .streamer-center-gap {
-  flex: 1; /* အလယ်ကင်မရာအတွက် နေရာလွတ် */
+  flex: 1;
 }
 
-/* Card Header */
+/* Team Name Plate: အမည်းဘောင်ဖျောက်ပြီး အသင်းကာလာ Glow ဖြင့် လှပအောင်ဖန်တီးခြင်း */
 .pitch-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(18, 26, 36, 0.95);
-  border: 1px solid rgba(118, 212, 0, 0.4);
-  border-radius: 10px 10px 4px 4px;
-  padding: 7px 12px;
-  margin-bottom: 6px;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: 14px 14px 0 0;
+  margin-bottom: 0;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-bottom: none;
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
 }
 
 .pitch-header.reverse {
@@ -178,27 +184,38 @@ body {
   text-align: right;
 }
 
+/* Formation Header ပေါ်ရှိ Logo အကြီး (အဝိုင်းအကြည် & Glow ပါဝင်) */
 .mini-logo {
-  width: 26px;
-  height: 26px;
+  width: 40px; /* 26px မှ 40px သို့ သိသိသာသာ ချဲ့ထားခြင်း */
+  height: 40px;
   object-fit: contain;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  padding: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
 }
 
+/* Team Title စာလုံးကြီး & ထင်ရှားသော Contrast */
 .team-title {
-  font-size: 14px;
+  font-size: 17px; /* စာလုံးအရွယ်အစား တိုးမြှင့်ထားခြင်း */
   font-weight: 900;
   color: #ffffff;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 .formation-tag {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
-  color: #76d400;
-  background: rgba(118, 212, 0, 0.18);
-  border: 1px solid rgba(118, 212, 0, 0.3);
-  padding: 2px 7px;
-  border-radius: 5px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-top: 2px;
+  display: inline-block;
 }
 
 /* =========================================
@@ -214,10 +231,11 @@ body {
     #15662d 28px,
     #15662d 56px
   );
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
+  border: 2.5px solid #76d400; /* Neon Lime Border */
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0 0 14px 14px;
   overflow: hidden;
-  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.65);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.65);
 }
 
 .pitch-markings {
@@ -461,15 +479,9 @@ body {
   font-weight: 800;
 }
 
-/* Home / Away Text Colors */
-.text-home {
-  color: #86efac; /* အိမ်ကွင်း အစိမ်းနုရောင် Text */
-}
-.text-away {
-  color: #fef08a; /* အဝေးကွင်း အဝါနုရောင် Text */
-}
+.text-home { color: #86efac; }
+.text-away { color: #fef08a; }
 
-/* Position Badges (GK, DEF, MID, FWD) */
 .pos-tag {
   font-size: 13px;
   font-weight: 900;
@@ -485,14 +497,12 @@ body {
 .pos-mid { background: #10b981; color: #fff; }
 .pos-fwd { background: #ef4444; color: #fff; }
 
-/* ကစားသမားတစ်ဦးချင်းစီကြား အစက်အပြောက် */
 .player-dot {
   color: rgba(255, 255, 255, 0.4);
   margin: 0 6px;
   font-weight: bold;
 }
 
-/* DEF, MID, FWD အပိုင်းများကြား ပိုင်းခြားထားသော ဒေါင်လိုက်စည်း Bar */
 .section-bar {
   color: #64748b;
   margin: 0 14px;
@@ -500,7 +510,6 @@ body {
   font-weight: 300;
 }
 
-/* အသင်း ၂ သင်းကြား ပိုင်းခြားသည့် အမှတ်အသား */
 .team-separator {
   color: #76d400;
   margin: 0 24px;
