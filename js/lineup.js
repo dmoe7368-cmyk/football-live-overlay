@@ -1,18 +1,18 @@
 window.CURRENT_MATCH_LINEUPS = {
-  bre: {
-    name: "Brentford",
-    manager: "Keith Andrews",
-    gk: ["1. Kelleher"],
-    def: ["33. Kayode", "4. van den Berg", "20. Ajer", "23. Lewis-Potter"],
-    mid: ["6. Yarmoliuk", "27. Janelt (C)", "11. Ouattara", "8. Jensen", "19. Anthony"],
-    fwd: ["9. Thiago"]
+  lee: {
+    name: "Leeds United",
+    manager: "Daniel Farke",
+    gk: ["1. Trafford"],
+    def: ["24. Justin", "30. Elvedi", "5. Muharemović"],
+    mid: ["2. Bogle", "18. Stach", "4. Ampadu", "22. Tanaka", "3. Gudmundsson"],
+    fwd: ["9. Calvert-Lewin", "19. Okafor"]
   },
-  liv: {
-    name: "Liverpool",
-    manager: "Andoni Iraola",
-    gk: ["1. Alisson"],
-    def: ["6. Kerkez", "4. van Dijk (C)", "5. Jacquet", "33. Araujo"],
-    mid: ["8. Szoboszlai", "10. Mac Allister", "29. Barcola", "7. Wirtz", "23. Muñoz"],
-    fwd: ["9. Isak"]
+  mun: {
+    name: "Man United",
+    manager: "Michael Carrick",
+    gk: ["1. Lammens"],
+    def: ["2. Dalot", "6. Martínez", "5. Maguire", "15. Yoro"],
+    mid: ["17. Santos", "18. Tielemans", "10. Cunha", "8. Fernandes", "16. Amad"],
+    fwd: ["19. Mbeumo"]
   }
 };
