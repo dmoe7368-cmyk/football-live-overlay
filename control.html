@@ -8,7 +8,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
-    /* Custom Time Input & Ticker Buttons များအတွက် Helper Styles */
+    /* Custom Time Input & Overlay Toggles အတွက် Helper Styles */
     .custom-time-box {
       display: flex;
       gap: 8px;
@@ -35,6 +35,13 @@
     .btn-ticker-show {
       background: #0284c7;
       color: #fff;
+    }
+    /* FotMob Stats Show Button (DOE PHAGYI Neon Green Theme) */
+    .btn-stats-show {
+      background: #76d400;
+      color: #000000;
+      font-weight: 900;
+      box-shadow: 0 0 10px rgba(118, 212, 0, 0.35);
     }
   </style>
 </head>
@@ -105,7 +112,7 @@
     </div>
   </div>
 
-  <!-- 3. Overlays Control (Pitch Formation & Bottom Scroll Lineup) -->
+  <!-- 3. Overlays Control (Pitches, Lineup Ticker & Match Stats) -->
   <div class="card">
     <!-- Tactical Pitch Toggle -->
     <span class="sub-label">Tactical Pitches (Left & Right)</span>
@@ -116,9 +123,16 @@
 
     <!-- Bottom Lineup Ticker Toggle -->
     <span class="sub-label">Bottom Scroll Lineup Ticker</span>
-    <div class="row">
+    <div class="row" style="margin-bottom: 12px;">
       <button class="btn btn-ticker-show" style="font-size: 14px; padding: 12px;" onclick="toggleTicker(true)">Show Scroll Lineup</button>
       <button class="btn btn-slate" style="font-size: 14px; padding: 12px;" onclick="toggleTicker(false)">Hide Scroll Lineup</button>
+    </div>
+
+    <!-- FotMob Live Match Stats Toggle (Show / Hide) -->
+    <span class="sub-label">Live Match Stats (FotMob API)</span>
+    <div class="row">
+      <button class="btn btn-stats-show" style="font-size: 14px; padding: 12px;" onclick="toggleStats(true)">Show Stats</button>
+      <button class="btn btn-slate" style="font-size: 14px; padding: 12px;" onclick="toggleStats(false)">Hide Stats</button>
     </div>
   </div>
 
