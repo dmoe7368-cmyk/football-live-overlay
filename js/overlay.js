@@ -29,8 +29,13 @@ matchRef.on('value', (snap) => {
   document.getElementById('home-score').textContent = data.homeScore ?? 0;
   document.getElementById('away-score').textContent = data.awayScore ?? 0;
 
+  // Scoreboard Logos (အရွယ်အစားကြီးပြီး ကြည်လင်ပြတ်သားစွာ ဖော်ပြခြင်း)
   document.getElementById('home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
   document.getElementById('away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
+
+  // Color Strips
+  document.getElementById('home-strip').style.backgroundColor = data.homeColor || '#76d400';
+  document.getElementById('away-strip').style.backgroundColor = data.awayColor || '#ef4444';
 
   // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ပြီး HALF TIME / FULL TIME သာ ပြသခြင်း)
   const currentPeriod = (data.period || '1st Half').trim();
@@ -56,16 +61,30 @@ matchRef.on('value', (snap) => {
     timerInterval = setInterval(renderTimer, 1000);
   }
 
-  // 3. Tactical Pitch Lineups
+  // 3. Tactical Pitch Lineups (Team Color Name Plate ပုံစံဖြင့် ချိတ်ဆက်ခြင်း)
   const lineupPanel = document.getElementById('lineups-panel');
   if (data.showLineup) {
     lineupPanel.classList.add('active');
 
+    // Home Pitch Setup
+    const homeHeader = document.querySelector('.left-pitch .pitch-header');
+    if (homeHeader) {
+      const hColor = data.homeColor || '#b91c1c';
+      homeHeader.style.background = `linear-gradient(135deg, ${hColor}ee 0%, #0d1520 85%)`;
+      homeHeader.style.borderColor = hColor;
+    }
     document.getElementById('lu-home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
     document.getElementById('lu-home-name').textContent = data.homeName || 'BRENTFORD';
     document.getElementById('lu-home-form').textContent = data.homeFormation || '4-2-3-1';
     buildTacticalPitch('home-pitch-players', data.homeKey || 'bre', data.homeFormation || '4-2-3-1');
 
+    // Away Pitch Setup
+    const awayHeader = document.querySelector('.right-pitch .pitch-header');
+    if (awayHeader) {
+      const aColor = data.awayColor || '#dc2626';
+      awayHeader.style.background = `linear-gradient(135deg, #0d1520 15%, ${aColor}ee 100%)`;
+      awayHeader.style.borderColor = aColor;
+    }
     document.getElementById('lu-away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
     document.getElementById('lu-away-name').textContent = data.awayName || 'LIVERPOOL';
     document.getElementById('lu-away-form').textContent = data.awayFormation || '4-2-3-1';
@@ -142,7 +161,7 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Lineup Scroll Ticker (အိမ်ကွင်း အစိမ်း၊ အဝေးကွင်း အဝါ နှင့် DEF, MID, FWD Divider Bars)
+// Lineup Scroll Ticker (အိမ်ကွင်း အစိမ်း၊ အဝေးကွင်း အဝါ၊ DEF, MID, FWD Divider Bars)
 function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "4-2-3-1") {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
@@ -172,7 +191,7 @@ function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "
         sections.push(`<span class="pos-tag pos-fwd">FWD</span><span class="${textClass}">${team.fwd.join('<span class="player-dot">•</span>')}</span>`);
       }
     } 
-    // ၂။ lineup: [...] array တစ်ခုတည်း ရေးထားပါက Formation အလိုက် အလိုအလျောက် ခွဲပေးခြင်း
+    // ၂။ lineup: [...] array တစ်ခုတည်း ရေးထားပါက Formation အလိုက် အလိုအလျောက် ခွဲထုတ်ပေးခြင်း
     else if (team.lineup && Array.isArray(team.lineup) && team.lineup.length > 0) {
       const arr = team.lineup;
       if (arr.length === 11) {
@@ -208,11 +227,9 @@ function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "
       sections.push(`<span style="color:${coachColor}; font-weight:800;">[Coach: ${team.manager}]</span>`);
     }
 
-    // Position အပိုင်းတစ်ခုချင်းစီကြား Divider Bar `|` ခံပေးခြင်း
     return sections.join('<span class="section-bar">|</span>');
   }
 
-  // Home: အစိမ်း (#76d400) | Away: အဝါ (#facc15)
   const hHtml = formatTeamLineup(hTeam, homeForm, true);
   const aHtml = formatTeamLineup(aTeam, awayForm, false);
 
