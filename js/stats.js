@@ -1,20 +1,11 @@
 // ========================================================
-// Leeds United vs Manchester United (Match ID: 4589210)
+// Leeds United vs Manchester United (Match ID: 5795480)
 // ========================================================
-const MANUAL_MATCH_ID = "4589210"; 
+const MANUAL_MATCH_ID = "5795480"; 
 
 let currentStatsMatchId = MANUAL_MATCH_ID;
 let statsFetchTimer = null;
 let isStatsVisibleByController = false;
-
-// FotMob အသင်းအမည် Search Map
-const FOTMOB_TEAM_NAMES = {
-  ars: "Arsenal", avl: "Aston Villa", bou: "Bournemouth", bre: "Brentford",
-  bha: "Brighton", che: "Chelsea", cov: "Coventry", cry: "Crystal Palace",
-  eve: "Everton", ful: "Fulham", hul: "Hull", ips: "Ipswich",
-  lee: "Leeds", liv: "Liverpool", mci: "Manchester City", mun: "Manchester United",
-  new: "Newcastle", nfo: "Nottingham Forest", sun: "Sunderland", tot: "Tottenham"
-};
 
 // Firebase Listener
 matchRef.on('value', (snap) => {
@@ -32,7 +23,7 @@ matchRef.on('value', (snap) => {
 
   panel.style.display = 'block';
 
-  // သတ်မှတ်ထားသော Match ID ဖြင့် Live Stats တိုက်ရိုက်ဆွဲယူခြင်း
+  // Match ID 5795480 ဖြင့် တိုက်ရိုက် ဆွဲတင်ခြင်း
   const activeMatchId = data.fotmobMatchId || MANUAL_MATCH_ID;
   if (activeMatchId) {
     currentStatsMatchId = activeMatchId;
@@ -43,16 +34,11 @@ matchRef.on('value', (snap) => {
       if (isStatsVisibleByController && currentStatsMatchId) {
         fetchMatchStatsData(currentStatsMatchId);
       }
-    }, 20000); // ၂၀ စက္ကန့်တစ်ကြိမ် Auto Update
-    return;
+    }, 20000); // စက္ကန့် ၂၀ တစ်ကြိမ် အလိုအလျောက် Live Update
   }
-
-  const hName = FOTMOB_TEAM_NAMES[data.homeKey] || data.homeName || "Leeds";
-  const aName = FOTMOB_TEAM_NAMES[data.awayKey] || data.awayName || "Man United";
-  loadMatchStats(hName, aName);
 });
 
-// Proxy များ အလှည့်ကျ စမ်းသပ် Fetch မည့် စနစ်
+// Proxy များ အလှည့်ကျ စမ်းသပ် ချိတ်ဆက်မည့် စနစ်
 async function fetchWithProxy(targetUrl) {
   const proxyList = [
     (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
@@ -67,7 +53,7 @@ async function fetchWithProxy(targetUrl) {
         return await res.json();
       }
     } catch (e) {
-      console.warn("Proxy retry...", e);
+      console.warn("Proxy connection trying next...", e);
     }
   }
   throw new Error("All Proxies Failed");
@@ -79,7 +65,11 @@ async function fetchMatchStatsData(matchId) {
     const matchApi = `https://www.fotmob.com/api/matchDetails?matchId=${matchId}`;
     const data = await fetchWithProxy(matchApi);
 
-    const statsData = data?.content?.stats?.Periods?.All?.stats || [];
+    // FotMob Stats Data Structure ကို အဆင့်ဆင့် ရှာဖွေခြင်း
+    const statsData = data?.content?.stats?.Periods?.All?.stats 
+      || data?.content?.stats?.stats 
+      || (Array.isArray(data?.content?.stats) ? data?.content?.stats : []);
+
     if (statsData.length > 0) {
       renderDisplayStats(statsData, "LIVE");
     }
@@ -88,41 +78,7 @@ async function fetchMatchStatsData(matchId) {
   }
 }
 
-// FotMob မှ အလိုအလျောက် ရှာဖွေခြင်း (Fallback)
-async function loadMatchStats(homeTeamName, awayTeamName) {
-  try {
-    const leagueApi = `https://www.fotmob.com/api/leagues?id=47`;
-    const json = await fetchWithProxy(leagueApi);
-
-    const matches = json?.overview?.leagueOverviewMatches || [];
-    const targetMatch = matches.find(m => {
-      const h = (m.home?.name || "").toLowerCase();
-      const a = (m.away?.name || "").toLowerCase();
-      const sH = (homeTeamName || "").toLowerCase();
-      const sA = (awayTeamName || "").toLowerCase();
-      return (h.includes(sH) || sH.includes(h)) && (a.includes(sA) || sA.includes(a));
-    });
-
-    if (targetMatch && targetMatch.id) {
-      currentStatsMatchId = targetMatch.id;
-      fetchMatchStatsData(currentStatsMatchId);
-
-      clearInterval(statsFetchTimer);
-      statsFetchTimer = setInterval(() => {
-        if (isStatsVisibleByController && currentStatsMatchId) {
-          fetchMatchStatsData(currentStatsMatchId);
-        }
-      }, 20000);
-    } else {
-      renderDisplayStats(null, "LIVE");
-    }
-  } catch (err) {
-    console.warn("Auto find error:", err);
-    renderDisplayStats(null, "LIVE");
-  }
-}
-
-// Stats UI သို့ ဂဏန်းများ တိုက်ရိုက် ထည့်သွင်းခြင်း
+// Stats UI သို့ Real-time ဂဏန်းများ ထည့်သွင်းပြသခြင်း
 function renderDisplayStats(statsGroups, badgeText = "LIVE") {
   const badge = document.querySelector('.stats-live-dot');
   if (badge) badge.textContent = badgeText;
@@ -141,10 +97,20 @@ function renderDisplayStats(statsGroups, badgeText = "LIVE") {
     });
   }
 
-  // 1. Possession Bar
-  const pos = statsMap["ball possession"] || { home: "64%", away: "36%" };
-  const hPos = parseInt(pos.home) || 64;
-  const aPos = parseInt(pos.away) || 36;
+  // ခေါင်းစဉ် အပြောင်းအလဲများအတွက် ရှာဖွေပေးမည့် Helper
+  function getStatVal(keywords, defaultHome = "0", defaultAway = "0") {
+    for (const key in statsMap) {
+      if (keywords.some(kw => key.includes(kw))) {
+        return statsMap[key];
+      }
+    }
+    return { home: defaultHome, away: defaultAway };
+  }
+
+  // 1. Ball Possession
+  const posData = getStatVal(["possession"], "50%", "50%");
+  const hPos = parseInt(posData.home) || 50;
+  const aPos = parseInt(posData.away) || 50;
   
   const elHPos = document.getElementById('stat-pos-home');
   const elAPos = document.getElementById('stat-pos-away');
@@ -156,14 +122,15 @@ function renderDisplayStats(statsGroups, badgeText = "LIVE") {
   if (barH) barH.style.width = `${hPos}%`;
   if (barA) barA.style.width = `${aPos}%`;
 
-  // 2. Stats Rows Config
+  // 2. Rows: xG, Shots, Passes, Corners, Fouls, Saves
   const rowConfigs = [
-    { key: "expected goals (xg)", label: "xG", defH: "0.00", defA: "0.03" },
-    { key: "total shots", label: "Total Shots", defH: "0", defA: "0" },
-    { key: "shots on target", label: "Shots on Target", defH: "0", defA: "0" },
-    { key: "accurate passes", label: "Passes", defH: "62", defA: "29" },
-    { key: "corner kicks", label: "Corners", defH: "0", defA: "0" },
-    { key: "goalkeeper saves", label: "Saves", defH: "0", defA: "0" }
+    { keywords: ["expected goals", "xg"], label: "xG", defH: "0.00", defA: "0.00" },
+    { keywords: ["total shots", "shots"], label: "Total Shots", defH: "0", defA: "0" },
+    { keywords: ["shots on target"], label: "Shots on Target", defH: "0", defA: "0" },
+    { keywords: ["accurate passes", "passes"], label: "Passes", defH: "0", defA: "0" },
+    { keywords: ["corner"], label: "Corners", defH: "0", defA: "0" },
+    { keywords: ["fouls"], label: "Fouls", defH: "0", defA: "0" },
+    { keywords: ["saves"], label: "Saves", defH: "0", defA: "0" }
   ];
 
   const listContainer = document.getElementById('stat-items-list');
@@ -171,15 +138,14 @@ function renderDisplayStats(statsGroups, badgeText = "LIVE") {
   listContainer.innerHTML = '';
 
   rowConfigs.forEach(cfg => {
-    const valH = statsMap[cfg.key]?.home ?? cfg.defH;
-    const valA = statsMap[cfg.key]?.away ?? cfg.defA;
+    const valObj = getStatVal(cfg.keywords, cfg.defH, cfg.defA);
 
     const row = document.createElement('div');
     row.className = 'stat-row-item';
     row.innerHTML = `
-      <span class="stat-num home">${valH}</span>
+      <span class="stat-num home">${valObj.home}</span>
       <span class="stat-title-center">${cfg.label}</span>
-      <span class="stat-num away">${valA}</span>
+      <span class="stat-num away">${valObj.away}</span>
     `;
     listContainer.appendChild(row);
   });
