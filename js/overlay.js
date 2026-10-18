@@ -3,9 +3,7 @@ let baseSeconds = 0;
 let isRunning = false;
 let startTime = 0;
 
-// Formation အလိုက် ကွင်းလယ်စည်း (Center 49%) ပေါ်တွင် အတိအကျ နေရာချထားမှု
 const FORMATION_POSITIONS = {
-  // 3-Line Formations: [Forwards 23%, Midfield (Center 49%), Defenders 74%]
   "4-3-3":   [23, 49, 74],
   "4-4-2":   [23, 49, 74],
   "3-4-3":   [23, 49, 74],
@@ -13,39 +11,39 @@ const FORMATION_POSITIONS = {
   "5-3-2":   [23, 49, 74],
   "5-2-3":   [23, 49, 74],
   "5-4-1":   [23, 49, 74],
-
-  // 4-Line Formations: [ST 22%, AM 36%, Center Midfield/DM (Center 49%), Def 74%]
   "3-4-2-1": [22, 36, 49, 74],
   "4-2-3-1": [22, 36, 49, 74],
   "3-4-1-2": [22, 36, 49, 74],
   "4-3-2-1": [22, 36, 49, 74],
-
-  // 4-1-4-1: ST (22%), 4 Mid (Center 49%), 1 DMC (62%), 4 Def (74%)
   "4-1-4-1": [22, 49, 62, 74]
 };
 
-// Firebase Realtime Listener
 matchRef.on('value', (snap) => {
   const data = snap.val();
   if (!data) return;
 
   // 1. Scoreboard Display
   document.getElementById('scoreboard').style.display = 'inline-flex';
-
-  // Teams & Scores
-  document.getElementById('home-code').textContent = data.homeShort || 'CRY';
-  document.getElementById('away-code').textContent = data.awayShort || 'MCI';
+  document.getElementById('home-code').textContent = data.homeShort || 'BRE';
+  document.getElementById('away-code').textContent = data.awayShort || 'LIV';
   document.getElementById('home-score').textContent = data.homeScore ?? 0;
   document.getElementById('away-score').textContent = data.awayScore ?? 0;
 
-  // Colors & Logos
-  document.getElementById('home-strip').style.backgroundColor = data.homeColor || '#1B458F';
-  document.getElementById('away-strip').style.backgroundColor = data.awayColor || '#6CABDD';
-  document.getElementById('home-logo').src = `assets/logos/${data.homeKey || 'cry'}.png`;
-  document.getElementById('away-logo').src = `assets/logos/${data.awayKey || 'mci'}.png`;
+  document.getElementById('home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
+  document.getElementById('away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
 
-  // Status & Period (1st Half, HT, 2nd Half, FT, 45 Min, 90 Min, Full Time)
-  document.getElementById('match-period').textContent = data.period || '1st Half';
+  // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ခြင်း)
+  const currentPeriod = (data.period || '1st Half').trim();
+  const periodEl = document.getElementById('match-period');
+  const clockBadgeEl = document.querySelector('.clock-badge');
+  periodEl.textContent = currentPeriod;
+
+  const isStopStatus = ['HT', 'HALF TIME', 'FT', 'FULL TIME'].includes(currentPeriod.toUpperCase());
+  if (isStopStatus) {
+    clockBadgeEl.classList.add('status-only');
+  } else {
+    clockBadgeEl.classList.remove('status-only');
+  }
 
   // 2. Timer Sync
   baseSeconds = data.timer?.baseSeconds || 0;
@@ -58,32 +56,30 @@ matchRef.on('value', (snap) => {
     timerInterval = setInterval(renderTimer, 1000);
   }
 
-  // 3. Tactical Lineups Display (Left & Right Pitches)
+  // 3. Tactical Pitch Lineups
   const lineupPanel = document.getElementById('lineups-panel');
   if (data.showLineup) {
     lineupPanel.classList.add('active');
 
-    // Home Setup
-    document.getElementById('lu-home-logo').src = `assets/logos/${data.homeKey || 'che'}.png`;
-    document.getElementById('lu-home-name').textContent = data.homeName || 'HOME';
-    document.getElementById('lu-home-form').textContent = data.homeFormation || '3-4-2-1';
-    buildTacticalPitch('home-pitch-players', data.homeKey || 'che', data.homeFormation || '3-4-2-1');
+    document.getElementById('lu-home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
+    document.getElementById('lu-home-name').textContent = data.homeName || 'BRENTFORD';
+    document.getElementById('lu-home-form').textContent = data.homeFormation || '4-2-3-1';
+    buildTacticalPitch('home-pitch-players', data.homeKey || 'bre', data.homeFormation || '4-2-3-1');
 
-    // Away Setup
-    document.getElementById('lu-away-logo').src = `assets/logos/${data.awayKey || 'bou'}.png`;
-    document.getElementById('lu-away-name').textContent = data.awayName || 'AWAY';
+    document.getElementById('lu-away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
+    document.getElementById('lu-away-name').textContent = data.awayName || 'LIVERPOOL';
     document.getElementById('lu-away-form').textContent = data.awayFormation || '4-2-3-1';
-    buildTacticalPitch('away-pitch-players', data.awayKey || 'bou', data.awayFormation || '4-2-3-1');
+    buildTacticalPitch('away-pitch-players', data.awayKey || 'liv', data.awayFormation || '4-2-3-1');
   } else {
     lineupPanel.classList.remove('active');
   }
 
-  // 4. Bottom Lineup Running Ticker Sync
+  // 4. Lineup Scroll Ticker
   const tickerBar = document.getElementById('lineup-ticker');
   if (tickerBar) {
     if (data.showTicker !== false) {
       tickerBar.style.display = 'flex';
-      renderLineupTicker(data.homeKey || 'che', data.awayKey || 'bou');
+      renderLineupTicker(data.homeKey || 'bre', data.awayKey || 'liv');
     } else {
       tickerBar.style.display = 'none';
     }
@@ -101,7 +97,6 @@ function renderTimer() {
     `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-// Tactical Pitch Positioning Logic (Jersey ဝိုင်းလေးများသာ ဖော်ပြခြင်း)
 function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   const container = document.getElementById(playersContainerId);
   if (!container) return;
@@ -116,7 +111,6 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
     [20, 35, 49, 63, 76]
   );
 
-  // Attackers -> Midfield -> Defenders အစဉ်အတိုင်း နေရာချထားခြင်း
   forwardToBack.forEach((count, idx) => {
     const rowEl = document.createElement('div');
     rowEl.className = `pitch-row row-${Math.min(count, 5)}`;
@@ -132,7 +126,6 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
     container.appendChild(rowEl);
   });
 
-  // GK Row (ဂိုးပေါက်ရှေ့ 90% တွင် အမြဲနေရာယူမည်)
   const gkRow = document.createElement('div');
   gkRow.className = 'pitch-row row-1';
   gkRow.style.top = '90%';
@@ -144,30 +137,34 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Bottom Lineup Scroll Ticker စာတန်းပြေး ရေးဆွဲခြင်း (သီးသန့်ဖိုင် CURRENT_MATCH_LINEUPS မှ ဖတ်ယူခြင်း)
+// Position အလိုက် (GK, DEF, MID, FWD) ခွဲထုတ်ပြသသည့် Ticker Renderer
 function renderLineupTicker(homeKey, awayKey) {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
 
-  // data/lineup-data.js မှ CURRENT_MATCH_LINEUPS ရှိမရှိ စစ်ဆေးခြင်း
   const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') ? CURRENT_MATCH_LINEUPS : {};
+  const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase() };
+  const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase() };
 
-  const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase(), manager: "", lineup: [] };
-  const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase(), manager: "", lineup: [] };
+  function formatTeamLineup(team) {
+    if (!team) return "Lineup TBA";
+    let parts = [];
+    if (team.gk && team.gk.length) parts.push(`<span class="pos-tag pos-gk">GK</span> ${team.gk.join(', ')}`);
+    if (team.def && team.def.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${team.def.join(', ')}`);
+    if (team.mid && team.mid.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${team.mid.join(', ')}`);
+    if (team.fwd && team.fwd.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${team.fwd.join(', ')}`);
+    if (team.manager) parts.push(`<span style="color:#76d400; font-weight:800; margin-left:10px;">[Coach: ${team.manager}]</span>`);
+    return parts.join(' &nbsp;•&nbsp; ');
+  }
 
-  const hList = hTeam.lineup && hTeam.lineup.length > 0 ? hTeam.lineup.join(' • ') : "Lineup TBA";
-  const aList = aTeam.lineup && aTeam.lineup.length > 0 ? aTeam.lineup.join(' • ') : "Lineup TBA";
+  const hHtml = formatTeamLineup(hTeam);
+  const aHtml = formatTeamLineup(aTeam);
 
-  // နည်းပြ (Coach) အမည် ပါရှိပါက ထည့်သွင်းပြသခြင်း
-  const hCoach = hTeam.manager ? `<span style="color:#38bdf8; font-weight:800; margin-left:8px;">[Coach: ${hTeam.manager}]</span>` : '';
-  const aCoach = aTeam.manager ? `<span style="color:#38bdf8; font-weight:800; margin-left:8px;">[Coach: ${aTeam.manager}]</span>` : '';
-
-  const tickerHtml = `
-    <span style="color:#facc15; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hList} ${hCoach}
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <span style="color:#f87171; font-weight:900;">[ ${aTeam.name.toUpperCase()} ]</span> ${aList} ${aCoach}
+  const fullContent = `
+    <span style="color:#76d400; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hHtml}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span style="color:#38bdf8; font-weight:900;">[ ${aTeam.name.toUpperCase()} ]</span> ${aHtml}
   `;
 
-  // စာတန်းပြတ်မသွားဘဲ ချောမွေ့စွာ ဆက်သွားစေရန် ၂ ကြိမ် ဆက်တိုက်ထည့်သွင်းခြင်း
-  tickerTextEl.innerHTML = `${tickerHtml} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${tickerHtml}`;
+  tickerTextEl.innerHTML = `${fullContent} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${fullContent}`;
 }
