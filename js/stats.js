@@ -1,9 +1,3 @@
-// ========================================================
-// FotMob Match ID (Controller က ပို့လျှင် Auto မိမည်၊ သို့မဟုတ် လက်ဖြင့် ထည့်နိုင်သည်)
-// ========================================================
-const DEFAULT_MATCH_ID = "5795480"; 
-
-let currentStatsMatchId = DEFAULT_MATCH_ID;
 let statsFetchTimer = null;
 let isStatsVisibleByController = false;
 
@@ -23,111 +17,116 @@ matchRef.on('value', (snap) => {
 
   panel.style.display = 'block';
 
-  const activeMatchId = data.fotmobMatchId || DEFAULT_MATCH_ID;
-  if (activeMatchId && activeMatchId !== currentStatsMatchId) {
-    currentStatsMatchId = activeMatchId;
-  }
+  const homeKey = data.homeKey || "lee";
+  const awayKey = data.awayKey || "mun";
 
-  // ချက်ချင်း ၁ ကြိမ် ဆွဲယူမည်
-  fetchMatchStatsFromVercel(currentStatsMatchId);
+  // ၁ ကြိမ် ချက်ချင်း ဆွဲယူမည်
+  fetchFPLMatchEvents(homeKey, awayKey);
 
-  // စက္ကန့် ၂၀ တစ်ကြိမ် အလိုအလျောက် Live Update လုပ်မည်
+  // စက္ကန့် ၂၅ တစ်ကြိမ် Auto Live Update
   clearInterval(statsFetchTimer);
   statsFetchTimer = setInterval(() => {
-    if (isStatsVisibleByController && currentStatsMatchId) {
-      fetchMatchStatsFromVercel(currentStatsMatchId);
+    if (isStatsVisibleByController) {
+      fetchFPLMatchEvents(homeKey, awayKey);
     }
-  }, 20000);
+  }, 25000);
 });
 
-// Vercel Serverless Function ဆီသို့ တိုက်ရိုက် ခေါ်ယူခြင်း
-async function fetchMatchStatsFromVercel(matchId) {
+// Vercel FPL API ဆီသို့ လှမ်းခေါ်ခြင်း
+async function fetchFPLMatchEvents(homeKey, awayKey) {
   try {
-    const res = await fetch(`/api/stats?matchId=${matchId}`);
-    if (!res.ok) throw new Error("Vercel API error");
+    const res = await fetch(`/api/stats?home=${homeKey}&away=${awayKey}`);
+    if (!res.ok) throw new Error("FPL API response error");
 
     const data = await res.json();
-
-    // Stats ဒေတာ စာရင်းကို အဆင့်ဆင့် ရှာဖွေခြင်း
-    const statsData = data?.content?.stats?.Periods?.All?.stats 
-      || data?.content?.stats?.stats 
-      || (Array.isArray(data?.content?.stats) ? data?.content?.stats : []);
-
-    if (statsData.length > 0) {
-      renderDisplayStats(statsData, "LIVE");
-    }
+    renderFPLEventsUI(data);
   } catch (err) {
-    console.warn("Stats fetch failed:", err);
+    console.warn("FPL fetch error:", err);
   }
 }
 
-// Stats UI တွင် ဂဏန်းများ ထည့်သွင်းပြသခြင်း
-function renderDisplayStats(statsGroups, badgeText = "LIVE") {
+// Stats UI တွင် FPL Events (ဂိုး၊ ကတ်၊ Saves) များ ပြသခြင်း
+function renderFPLEventsUI(data) {
   const badge = document.querySelector('.stats-live-dot');
-  if (badge) badge.textContent = badgeText;
+  if (badge) badge.textContent = "FPL LIVE";
 
-  let statsMap = {};
+  // ၁။ ထိပ်ဆုံး Bar (BPS Performance အချိုးအစား)
+  const hBps = data?.bps?.home || 0;
+  const aBps = data?.bps?.away || 0;
+  const totalBps = hBps + aBps;
 
-  if (statsGroups && statsGroups.length) {
-    statsGroups.forEach(group => {
-      (group.stats || []).forEach(item => {
-        const title = (item.title || "").toLowerCase();
-        const vals = item.stats || [];
-        if (vals.length >= 2) {
-          statsMap[title] = { home: vals[0], away: vals[1] };
-        }
-      });
-    });
+  let hPct = 50;
+  let aPct = 50;
+  if (totalBps > 0) {
+    hPct = Math.round((hBps / totalBps) * 100);
+    aPct = 100 - hPct;
   }
 
-  function getStatVal(keywords, defaultHome = "0", defaultAway = "0") {
-    for (const key in statsMap) {
-      if (keywords.some(kw => key.includes(kw))) {
-        return statsMap[key];
-      }
-    }
-    return { home: defaultHome, away: defaultAway };
-  }
-
-  // 1. Ball Possession
-  const posData = getStatVal(["possession"], "50%", "50%");
-  const hPos = parseInt(posData.home) || 50;
-  const aPos = parseInt(posData.away) || 50;
-  
   const elHPos = document.getElementById('stat-pos-home');
   const elAPos = document.getElementById('stat-pos-away');
   const barH = document.getElementById('pos-bar-home');
   const barA = document.getElementById('pos-bar-away');
 
-  if (elHPos) elHPos.textContent = `${hPos}%`;
-  if (elAPos) elAPos.textContent = `${aPos}%`;
-  if (barH) barH.style.width = `${hPos}%`;
-  if (barA) barA.style.width = `${aPos}%`;
+  // Title ကို BPS POINTS ဟု ပြောင်းခြင်း
+  const posTitle = document.querySelector('.possession-title') || document.querySelector('.stat-title-center');
+  if (posTitle && posTitle.textContent.includes("POSSESSION")) {
+    posTitle.textContent = "PERFORMANCE (BPS)";
+  }
 
-  // 2. Rows: xG, Shots, Passes, Corners, Fouls, Saves
-  const rowConfigs = [
-    { keywords: ["expected goals", "xg"], label: "xG", defH: "0.00", defA: "0.00" },
-    { keywords: ["total shots", "shots"], label: "Total Shots", defH: "0", defA: "0" },
-    { keywords: ["shots on target"], label: "Shots on Target", defH: "0", defA: "0" },
-    { keywords: ["accurate passes", "passes"], label: "Passes", defH: "0", defA: "0" },
-    { keywords: ["corner"], label: "Corners", defH: "0", defA: "0" },
-    { keywords: ["fouls"], label: "Fouls", defH: "0", defA: "0" },
-    { keywords: ["saves"], label: "Saves", defH: "0", defA: "0" }
+  if (elHPos) elHPos.textContent = `${hBps}`;
+  if (elAPos) elAPos.textContent = `${aBps}`;
+  if (barH) barH.style.width = `${hPct}%`;
+  if (barA) barA.style.width = `${aPct}%`;
+
+  // ၂။ Match Events စာရင်း (ဂိုးသွင်းသူ၊ ကတ်ပြခံရသူ နာမည်များ ပါဝင်သည်)
+  const formatVal = (statObj) => {
+    const count = statObj?.count || 0;
+    const players = statObj?.players || [];
+    if (players.length > 0) {
+      return `${count} (${players.join(', ')})`;
+    }
+    return `${count}`;
+  };
+
+  const eventRows = [
+    {
+      label: "Goals",
+      home: formatVal({ count: data?.goals?.homeCount, players: data?.goals?.homePlayers }),
+      away: formatVal({ count: data?.goals?.awayCount, players: data?.goals?.awayPlayers })
+    },
+    {
+      label: "Assists",
+      home: formatVal({ count: data?.assists?.homeCount, players: data?.assists?.homePlayers }),
+      away: formatVal({ count: data?.assists?.awayCount, players: data?.assists?.awayPlayers })
+    },
+    {
+      label: "Yellow Cards",
+      home: formatVal({ count: data?.yellowCards?.homeCount, players: data?.yellowCards?.homePlayers }),
+      away: formatVal({ count: data?.yellowCards?.awayCount, players: data?.yellowCards?.awayPlayers })
+    },
+    {
+      label: "Red Cards",
+      home: formatVal({ count: data?.redCards?.homeCount, players: data?.redCards?.homePlayers }),
+      away: formatVal({ count: data?.redCards?.awayCount, players: data?.redCards?.awayPlayers })
+    },
+    {
+      label: "Saves",
+      home: `${data?.saves?.homeCount || 0}`,
+      away: `${data?.saves?.awayCount || 0}`
+    }
   ];
 
   const listContainer = document.getElementById('stat-items-list');
   if (!listContainer) return;
   listContainer.innerHTML = '';
 
-  rowConfigs.forEach(cfg => {
-    const valObj = getStatVal(cfg.keywords, cfg.defH, cfg.defA);
-
+  eventRows.forEach(cfg => {
     const row = document.createElement('div');
     row.className = 'stat-row-item';
     row.innerHTML = `
-      <span class="stat-num home">${valObj.home}</span>
+      <span class="stat-num home" style="font-size: 11px;">${cfg.home}</span>
       <span class="stat-title-center">${cfg.label}</span>
-      <span class="stat-num away">${valObj.away}</span>
+      <span class="stat-num away" style="font-size: 11px;">${cfg.away}</span>
     `;
     listContainer.appendChild(row);
   });
