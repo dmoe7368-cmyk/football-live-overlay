@@ -32,7 +32,7 @@ matchRef.on('value', (snap) => {
   document.getElementById('home-logo').src = `assets/logos/${data.homeKey || 'bre'}.png`;
   document.getElementById('away-logo').src = `assets/logos/${data.awayKey || 'liv'}.png`;
 
-  // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ပြီး စာတန်းသာ ပြသခြင်း)
+  // Status & Period Check (HT / FT ဖြစ်လျှင် မိနစ်ဖျောက်ပြီး HALF TIME / FULL TIME သာ ပြသခြင်း)
   const currentPeriod = (data.period || '1st Half').trim();
   const periodEl = document.getElementById('match-period');
   const clockBadgeEl = document.querySelector('.clock-badge');
@@ -79,7 +79,12 @@ matchRef.on('value', (snap) => {
   if (tickerBar) {
     if (data.showTicker !== false) {
       tickerBar.style.display = 'flex';
-      renderLineupTicker(data.homeKey || 'bre', data.awayKey || 'liv');
+      renderLineupTicker(
+        data.homeKey || 'bre',
+        data.awayKey || 'liv',
+        data.homeFormation || '4-2-3-1',
+        data.awayFormation || '4-2-3-1'
+      );
     } else {
       tickerBar.style.display = 'none';
     }
@@ -137,28 +142,53 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Lineup Scroll Ticker (GK, DEF, MID, FWD အလိုအလျောက် ခွဲထုတ်ပြသခြင်း)
-function renderLineupTicker(homeKey, awayKey) {
+// Lineup Scroll Ticker (lineup: [...] array ဖြစ်စေ၊ gk/def/mid/fwd ခွဲထားသည်ဖြစ်စေ အလိုအလျောက် ခွဲထုတ်ပြသခြင်း)
+function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "4-2-3-1") {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
 
-  const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') ? CURRENT_MATCH_LINEUPS : (window.CURRENT_MATCH_LINEUPS || {});
+  const dataSource = (typeof CURRENT_MATCH_LINEUPS !== 'undefined') 
+    ? CURRENT_MATCH_LINEUPS 
+    : (window.CURRENT_MATCH_LINEUPS || {});
+
   const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase() };
   const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase() };
 
-  function formatTeamLineup(team) {
+  function formatTeamLineup(team, formationStr) {
     if (!team) return "Lineup TBA";
     let parts = [];
 
-    // ၁။ အကယ်၍ gk, def, mid, fwd သီးသန့် ခွဲထားပါက
-    if (team.gk && team.gk.length) parts.push(`<span class="pos-tag pos-gk">GK</span> ${team.gk.join(', ')}`);
-    if (team.def && team.def.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${team.def.join(', ')}`);
-    if (team.mid && team.mid.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${team.mid.join(', ')}`);
-    if (team.fwd && team.fwd.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${team.fwd.join(', ')}`);
+    // ၁။ အကယ်၍ gk, def, mid, fwd သီးသန့် ခွဲရေးထားပါက
+    if (team.gk && team.gk.length) {
+      parts.push(`<span class="pos-tag pos-gk">GK</span> ${team.gk.join(', ')}`);
+      if (team.def && team.def.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${team.def.join(', ')}`);
+      if (team.mid && team.mid.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${team.mid.join(', ')}`);
+      if (team.fwd && team.fwd.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${team.fwd.join(', ')}`);
+    } 
+    // ၂။ အကယ်၍ lineup: [...] အဖြစ် ၁၁ ယောက်စာရင်း တစ်စုတည်း ရေးထားပါက (Formation အလိုက် အလိုအလျောက် GK, DEF, MID, FWD ခွဲထုတ်ပေးခြင်း)
+    else if (team.lineup && Array.isArray(team.lineup) && team.lineup.length > 0) {
+      const arr = team.lineup;
+      if (arr.length === 11) {
+        const gk = arr[0]; // ၁ ယောက်မြောက်သည် အမြဲ GK
+        
+        const fParts = (formationStr || "4-2-3-1").split('-').map(Number);
+        const defCount = fParts[0] || 4; // ခံစစ်လူဦးရေ
+        const fwdCount = fParts[fParts.length - 1] || 1; // တိုက်စစ်လူဦးရေ
+        let midCount = 11 - 1 - defCount - fwdCount; // ကျန်သူများမှာ ကွင်းလယ်
+        if (midCount < 1) midCount = 1;
 
-    // ၂။ အကယ်၍ lineup: [...] တစ်စုတည်း ရေးထားပါက (မပျောက်သွားစေရန် အလိုအလျောက် ပြသပေးခြင်း)
-    if (parts.length === 0 && team.lineup && team.lineup.length) {
-      parts.push(team.lineup.join(' &nbsp;•&nbsp; '));
+        const defs = arr.slice(1, 1 + defCount);
+        const mids = arr.slice(1 + defCount, 1 + defCount + midCount);
+        const fwds = arr.slice(1 + defCount + midCount);
+
+        parts.push(`<span class="pos-tag pos-gk">GK</span> ${gk}`);
+        if (defs.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${defs.join(', ')}`);
+        if (mids.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${mids.join(', ')}`);
+        if (fwds.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${fwds.join(', ')}`);
+      } else {
+        // ၁၁ ယောက်မပြည့်ပါက ရှိသမျှကို ပုံမှန်အတိုင်းပြသခြင်း
+        parts.push(arr.join(' &nbsp;•&nbsp; '));
+      }
     }
 
     // နည်းပြ (Coach)
@@ -169,8 +199,8 @@ function renderLineupTicker(homeKey, awayKey) {
     return parts.length ? parts.join(' &nbsp;&nbsp;•&nbsp;&nbsp; ') : "Lineup TBA";
   }
 
-  const hHtml = formatTeamLineup(hTeam);
-  const aHtml = formatTeamLineup(aTeam);
+  const hHtml = formatTeamLineup(hTeam, homeForm);
+  const aHtml = formatTeamLineup(aTeam, awayForm);
 
   const fullContent = `
     <span style="color:#76d400; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hHtml}
