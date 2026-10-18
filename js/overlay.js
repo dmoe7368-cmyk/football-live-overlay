@@ -142,7 +142,7 @@ function buildTacticalPitch(playersContainerId, teamKey, formationStr) {
   container.appendChild(gkRow);
 }
 
-// Lineup Scroll Ticker (lineup: [...] array ဖြစ်စေ၊ gk/def/mid/fwd ခွဲထားသည်ဖြစ်စေ အလိုအလျောက် ခွဲထုတ်ပြသခြင်း)
+// Lineup Scroll Ticker (အိမ်ကွင်း အစိမ်း၊ အဝေးကွင်း အဝါ နှင့် DEF, MID, FWD Divider Bars)
 function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "4-2-3-1") {
   const tickerTextEl = document.getElementById('ticker-text');
   if (!tickerTextEl) return;
@@ -154,58 +154,72 @@ function renderLineupTicker(homeKey, awayKey, homeForm = "4-2-3-1", awayForm = "
   const hTeam = dataSource[homeKey] || { name: homeKey.toUpperCase() };
   const aTeam = dataSource[awayKey] || { name: awayKey.toUpperCase() };
 
-  function formatTeamLineup(team, formationStr) {
+  function formatTeamLineup(team, formationStr, isHome = true) {
     if (!team) return "Lineup TBA";
-    let parts = [];
+    const textClass = isHome ? "text-home" : "text-away";
+    let sections = [];
 
-    // ၁။ အကယ်၍ gk, def, mid, fwd သီးသန့် ခွဲရေးထားပါက
+    // ၁။ gk, def, mid, fwd သီးသန့်ခွဲထားပါက
     if (team.gk && team.gk.length) {
-      parts.push(`<span class="pos-tag pos-gk">GK</span> ${team.gk.join(', ')}`);
-      if (team.def && team.def.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${team.def.join(', ')}`);
-      if (team.mid && team.mid.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${team.mid.join(', ')}`);
-      if (team.fwd && team.fwd.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${team.fwd.join(', ')}`);
+      sections.push(`<span class="pos-tag pos-gk">GK</span><span class="${textClass}">${team.gk.join('<span class="player-dot">•</span>')}</span>`);
+      if (team.def && team.def.length) {
+        sections.push(`<span class="pos-tag pos-def">DEF</span><span class="${textClass}">${team.def.join('<span class="player-dot">•</span>')}</span>`);
+      }
+      if (team.mid && team.mid.length) {
+        sections.push(`<span class="pos-tag pos-mid">MID</span><span class="${textClass}">${team.mid.join('<span class="player-dot">•</span>')}</span>`);
+      }
+      if (team.fwd && team.fwd.length) {
+        sections.push(`<span class="pos-tag pos-fwd">FWD</span><span class="${textClass}">${team.fwd.join('<span class="player-dot">•</span>')}</span>`);
+      }
     } 
-    // ၂။ အကယ်၍ lineup: [...] အဖြစ် ၁၁ ယောက်စာရင်း တစ်စုတည်း ရေးထားပါက (Formation အလိုက် အလိုအလျောက် GK, DEF, MID, FWD ခွဲထုတ်ပေးခြင်း)
+    // ၂။ lineup: [...] array တစ်ခုတည်း ရေးထားပါက Formation အလိုက် အလိုအလျောက် ခွဲပေးခြင်း
     else if (team.lineup && Array.isArray(team.lineup) && team.lineup.length > 0) {
       const arr = team.lineup;
       if (arr.length === 11) {
-        const gk = arr[0]; // ၁ ယောက်မြောက်သည် အမြဲ GK
-        
+        const gk = arr[0];
         const fParts = (formationStr || "4-2-3-1").split('-').map(Number);
-        const defCount = fParts[0] || 4; // ခံစစ်လူဦးရေ
-        const fwdCount = fParts[fParts.length - 1] || 1; // တိုက်စစ်လူဦးရေ
-        let midCount = 11 - 1 - defCount - fwdCount; // ကျန်သူများမှာ ကွင်းလယ်
+        const defCount = fParts[0] || 4;
+        const fwdCount = fParts[fParts.length - 1] || 1;
+        let midCount = 11 - 1 - defCount - fwdCount;
         if (midCount < 1) midCount = 1;
 
         const defs = arr.slice(1, 1 + defCount);
         const mids = arr.slice(1 + defCount, 1 + defCount + midCount);
         const fwds = arr.slice(1 + defCount + midCount);
 
-        parts.push(`<span class="pos-tag pos-gk">GK</span> ${gk}`);
-        if (defs.length) parts.push(`<span class="pos-tag pos-def">DEF</span> ${defs.join(', ')}`);
-        if (mids.length) parts.push(`<span class="pos-tag pos-mid">MID</span> ${mids.join(', ')}`);
-        if (fwds.length) parts.push(`<span class="pos-tag pos-fwd">FWD</span> ${fwds.join(', ')}`);
+        sections.push(`<span class="pos-tag pos-gk">GK</span><span class="${textClass}">${gk}</span>`);
+        if (defs.length) {
+          sections.push(`<span class="pos-tag pos-def">DEF</span><span class="${textClass}">${defs.join('<span class="player-dot">•</span>')}</span>`);
+        }
+        if (mids.length) {
+          sections.push(`<span class="pos-tag pos-mid">MID</span><span class="${textClass}">${mids.join('<span class="player-dot">•</span>')}</span>`);
+        }
+        if (fwds.length) {
+          sections.push(`<span class="pos-tag pos-fwd">FWD</span><span class="${textClass}">${fwds.join('<span class="player-dot">•</span>')}</span>`);
+        }
       } else {
-        // ၁၁ ယောက်မပြည့်ပါက ရှိသမျှကို ပုံမှန်အတိုင်းပြသခြင်း
-        parts.push(arr.join(' &nbsp;•&nbsp; '));
+        sections.push(`<span class="${textClass}">${arr.join('<span class="player-dot">•</span>')}</span>`);
       }
     }
 
     // နည်းပြ (Coach)
     if (team.manager) {
-      parts.push(`<span style="color:#76d400; font-weight:800; margin-left:8px;">[Coach: ${team.manager}]</span>`);
+      const coachColor = isHome ? "#76d400" : "#facc15";
+      sections.push(`<span style="color:${coachColor}; font-weight:800;">[Coach: ${team.manager}]</span>`);
     }
 
-    return parts.length ? parts.join(' &nbsp;&nbsp;•&nbsp;&nbsp; ') : "Lineup TBA";
+    // Position အပိုင်းတစ်ခုချင်းစီကြား Divider Bar `|` ခံပေးခြင်း
+    return sections.join('<span class="section-bar">|</span>');
   }
 
-  const hHtml = formatTeamLineup(hTeam, homeForm);
-  const aHtml = formatTeamLineup(aTeam, awayForm);
+  // Home: အစိမ်း (#76d400) | Away: အဝါ (#facc15)
+  const hHtml = formatTeamLineup(hTeam, homeForm, true);
+  const aHtml = formatTeamLineup(aTeam, awayForm, false);
 
   const fullContent = `
-    <span style="color:#76d400; font-weight:900;">[ ${hTeam.name.toUpperCase()} ]</span> ${hHtml}
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <span style="color:#38bdf8; font-weight:900;">[ ${aTeam.name.toUpperCase()} ]</span> ${aHtml}
+    <span style="color:#76d400; font-weight:900; letter-spacing:1px;">[ ${hTeam.name.toUpperCase()} ]</span>&nbsp;&nbsp;${hHtml}
+    <span class="team-separator">❖</span>
+    <span style="color:#facc15; font-weight:900; letter-spacing:1px;">[ ${aTeam.name.toUpperCase()} ]</span>&nbsp;&nbsp;${aHtml}
   `;
 
   tickerTextEl.innerHTML = `${fullContent} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${fullContent}`;
