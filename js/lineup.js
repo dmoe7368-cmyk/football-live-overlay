@@ -1,18 +1,18 @@
 window.CURRENT_MATCH_LINEUPS = {
+  che: {
+    name: "Chelsea",
+    manager: "", // ပုံထဲတွင် နည်းပြအမည်မပါဝင်သဖြင့် အလွတ်ထားပေးထားပါသည်
+    gk: ["39. Penders"],
+    def: ["34. Acheampong", "3. Fofana", "6. Colwill"],
+    mid: ["7. Neto", "25. Caicedo (C)", "45. Lavia", "2. Palestra", "41. Estêvão", "10. Palmer"],
+    fwd: ["17. Rogers"]
+  },
   mun: {
     name: "Man United",
-    manager: "Michael Carrick",
+    manager: "", 
     gk: ["1. Lammens"],
-    def: ["2. Dalot", "15. Yoro", "5. Maguire (C)", "26. Heaven"],
-    mid: ["17. Santos", "20. Baleba", "16. Amad", "18. Tielemans", "7. Mount"],
+    def: ["2. Dalot", "6. Martínez", "5. Maguire", "15. Yoro"],
+    mid: ["20. Baleba", "17. Santos", "10. Cunha", "8. Fernandes (C)", "16. Amad"],
     fwd: ["19. Mbeumo"]
-  },
-  bou: {
-    name: "Bournemouth",
-    manager: "Marco Rose",
-    gk: ["1. Petrović"],
-    def: ["3. Truffert", "14. Silva", "5. Hill", "15. Smith (C)"],
-    mid: ["4. Cook", "12. Adams", "16. Tavernier", "19. Kluivert", "37. Rayan"],
-    fwd: ["9. Evanilson"]
   }
 };
